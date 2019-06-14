@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="project" content="bot_army v0.1.0">
+    <title>Bot Army — bot_army v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <script src="dist/sidebar_items-78a9a91697.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
+    
+  </head>
+  <body data-type="extras">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+bot_army      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+      <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+<h1>Bot Army</h1>
+<p>A framework for building and running &quot;bots&quot; for load testing and integration testing.
+Bots are defined by <a href="https://hexdocs.pm/behavior_tree/BehaviorTree.html">Behavior
+Trees</a> to replicate different
+user sequences.</p>
+<p>This package is a generic runner.  It works in conjunction with domain specific bots
+that you define in the service you want to test.</p>
+<h2 id="behavior-what" class="section-heading">
+  <a href="#behavior-what" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Behavior what?
+</h2>
+
+<p>Behavior trees.  It&#39;s a nifty way to declaratively express complex and variable
+sequences of actions.  Most importantly, they are composable, which makes them easy
+to work with, and easy to scale.</p>
+<p><a href="https://hexdocs.pm/behavior_tree/BehaviorTree.html">Read up on the docs</a> or <a href="https://www.youtube.com/watch?v=3sLYzxuKGXI">Watch a
+video</a>.</p>
+<p>Bots look like this:</p>
+<pre><code class="nohighlight makeup elixir"><span class="c1"># in MyService.Workflow.Simple</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">tree</span><span class="w"> </span><span class="k" data-group-id="1458921052-1">do</span><span class="w">
+  </span><span class="nc">BehaviorTree.Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="1458921052-2">(</span><span class="p" data-group-id="1458921052-3">[</span><span class="w">
+    </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-4">(</span><span class="nc">MyService.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:get_ready</span><span class="p" data-group-id="1458921052-4">)</span><span class="p">,</span><span class="w">
+    </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-5">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1458921052-6">[</span><span class="mi">5</span><span class="p" data-group-id="1458921052-6">]</span><span class="p" data-group-id="1458921052-5">)</span><span class="p">,</span><span class="w">
+    </span><span class="nc">BehaviorTree.Node</span><span class="o">.</span><span class="n">select</span><span class="p" data-group-id="1458921052-7">(</span><span class="p" data-group-id="1458921052-8">[</span><span class="w">
+      </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-9">(</span><span class="nc">MyService.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:try_something</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1458921052-10">[</span><span class="mi">42</span><span class="p" data-group-id="1458921052-10">]</span><span class="p" data-group-id="1458921052-9">)</span><span class="p">,</span><span class="w">
+      </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-11">(</span><span class="nc">MyService.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:try_something_else</span><span class="p" data-group-id="1458921052-11">)</span><span class="p">,</span><span class="w">
+      </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-12">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1458921052-13">[</span><span class="s">&quot;Darn, didn&#39;t work!&quot;</span><span class="p" data-group-id="1458921052-13">]</span><span class="p" data-group-id="1458921052-12">)</span><span class="w">
+    </span><span class="p" data-group-id="1458921052-8">]</span><span class="p" data-group-id="1458921052-7">)</span><span class="p">,</span><span class="w">
+    </span><span class="nc">MyService.Workflow.DifficultWork</span><span class="o">.</span><span class="n">tree</span><span class="p" data-group-id="1458921052-14">(</span><span class="p" data-group-id="1458921052-14">)</span><span class="p">,</span><span class="w">
+    </span><span class="nc">BotArmy.Actions</span><span class="o">.</span><span class="n">action</span><span class="p" data-group-id="1458921052-15">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:done</span><span class="p" data-group-id="1458921052-15">)</span><span class="w">
+  </span><span class="p" data-group-id="1458921052-3">]</span><span class="p" data-group-id="1458921052-2">)</span><span class="w">
+</span><span class="k" data-group-id="1458921052-1">end</span></code></pre>
+<pre><code class="nohighlight makeup elixir"><span class="c1"># in MyService.Actions</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">get_ready</span><span class="p" data-group-id="0830686440-1">(</span><span class="n">context</span><span class="p" data-group-id="0830686440-1">)</span><span class="w"> </span><span class="k" data-group-id="0830686440-2">do</span><span class="w">
+  </span><span class="p" data-group-id="0830686440-3">{</span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">id</span><span class="p" data-group-id="0830686440-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">set_up</span><span class="p" data-group-id="0830686440-4">(</span><span class="p" data-group-id="0830686440-4">)</span><span class="w">
+  </span><span class="p" data-group-id="0830686440-5">{</span><span class="ss">:succeed</span><span class="p">,</span><span class="w"> </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="n">id</span><span class="p" data-group-id="0830686440-5">}</span><span class="w"> </span><span class="c1"># adds `id` to the context for future actions to use</span><span class="w">
+</span><span class="k" data-group-id="0830686440-2">end</span><span class="w">
+
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">try_something</span><span class="p" data-group-id="0830686440-6">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">magic_number</span><span class="p" data-group-id="0830686440-6">)</span><span class="w"> </span><span class="k" data-group-id="0830686440-7">do</span><span class="w">
+  </span><span class="k">case</span><span class="w"> </span><span class="n">do_it</span><span class="p" data-group-id="0830686440-8">(</span><span class="n">context</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">magic_number</span><span class="p" data-group-id="0830686440-8">)</span><span class="w"> </span><span class="k" data-group-id="0830686440-9">do</span><span class="w">
+    </span><span class="p" data-group-id="0830686440-10">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="0830686440-10">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:succeed</span><span class="w">
+    </span><span class="p" data-group-id="0830686440-11">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="0830686440-11">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:fail</span><span class="w">
+  </span><span class="k" data-group-id="0830686440-9">end</span><span class="w">
+</span><span class="k" data-group-id="0830686440-7">end</span><span class="w">
+
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">try_something_else</span><span class="p" data-group-id="0830686440-12">(</span><span class="n">context</span><span class="p" data-group-id="0830686440-12">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">...</span></code></pre>
+<p>See <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a> and <a href="BotArmy.BotManager.html"><code class="inline">BotArmy.BotManager</code></a> and <a href="BotArmy.Actions.html"><code class="inline">BotArmy.Actions</code></a> for more details.</p>
+<h2 id="release-the-bots" class="section-heading">
+  <a href="#release-the-bots" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Release the bots!
+</h2>
+
+<p>Run the bots with <a href="Mix.Tasks.Bots.Run.html"><code class="inline">mix bots.run</code></a>:</p>
+<pre><code class="nohighlight makeup elixir"><span class="n">mix</span><span class="w"> </span><span class="n">bots</span><span class="o">.</span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">n</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">--</span><span class="n">tree</span><span class="w"> </span><span class="nc">MyService.Workflow.Simple</span></code></pre>
+<h2 id="integration-testing" class="section-heading">
+  <a href="#integration-testing" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Integration testing
+</h2>
+
+<p>The bots can double as an integration testing system, which you can integrate into
+your CI pipeline.   You can run the integration tests directly by running
+<a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>.</p>
+<p>You can also use the <code class="inline">integration/start</code> endpoint (see below).  The supplied
+<code class="inline">callback_url</code> will be POSTed to with the results as <code class="inline">:ok</code> or <code class="inline">{:error, reason}</code>.</p>
+<h2 id="logging" class="section-heading">
+  <a href="#logging" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Logging
+</h2>
+
+<blockquote><p>Logs are shunted to the <code class="inline">./bot_run.log</code> file.</p>
+</blockquote>
+<p>It&#39;s hard to keep up with thousands of bots.  The logs help, but need to be analyzed
+in meaningful ways.  Using <a href="http://lnav.org"><code class="inline">lnav</code></a> to view the <code class="inline">bot_run.log</code> file
+is extremely useful.  One useful approach is simply to find where errors occurred,
+but making use of the SQL feature can give very useful metrics.  Try these queries
+for example (note that the key words are auto-derived from the log format):</p>
+<pre><code class="nohighlight makeup elixir"><span class="c1"># list how many times each action ran</span><span class="w">
+</span><span class="p">;</span><span class="n">select</span><span class="w"> </span><span class="n">count</span><span class="p" data-group-id="0230393323-1">(</span><span class="n">action_0</span><span class="p" data-group-id="0230393323-1">)</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">logline</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">action_0</span><span class="w">
+
+</span><span class="c1">#see how long actions took on aggregate</span><span class="w">
+</span><span class="p">;</span><span class="n">select</span><span class="w"> </span><span class="n">min</span><span class="p" data-group-id="0230393323-2">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-2">)</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p" data-group-id="0230393323-3">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-3">)</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p" data-group-id="0230393323-4">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-4">)</span><span class="p">,</span><span class="w"> </span><span class="n">avg</span><span class="p" data-group-id="0230393323-5">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-5">)</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">logline</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">action_0</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">avg</span><span class="p" data-group-id="0230393323-6">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-6">)</span><span class="w"> </span><span class="n">desc</span><span class="w">
+
+</span><span class="c1"># Show count and duration for each distinct action attempted by the bots, grouped</span><span class="w">
+</span><span class="n">by</span><span class="w"> </span><span class="n">success</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">failure</span><span class="o">.</span><span class="w">
+</span><span class="p">;</span><span class="n">select</span><span class="w"> </span><span class="n">count</span><span class="p" data-group-id="0230393323-7">(</span><span class="n">action_0</span><span class="p" data-group-id="0230393323-7">)</span><span class="p">,</span><span class="w"> </span><span class="n">avg</span><span class="p" data-group-id="0230393323-8">(</span><span class="n">duration</span><span class="p" data-group-id="0230393323-8">)</span><span class="p">,</span><span class="w"> </span><span class="n">outcome</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="p">,</span><span class="w"> </span><span class="n">outcome</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">logline</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">outcome</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="w">
+
+</span><span class="c1"># list actions with their num of failures and errors and success rate</span><span class="w">
+</span><span class="p">;</span><span class="nc">SELECT</span><span class="w"> </span><span class="n">action_0</span><span class="p">,</span><span class="n">count</span><span class="p" data-group-id="0230393323-9">(</span><span class="o">*</span><span class="p" data-group-id="0230393323-9">)</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">runs</span><span class="p">,</span><span class="n">count</span><span class="p" data-group-id="0230393323-10">(</span><span class="nc">CASE</span><span class="w"> </span><span class="n">outcome</span><span class="w"> </span><span class="nc">WHEN</span><span class="w"> </span><span class="s">&quot;fail&quot;</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">end</span><span class="p" data-group-id="0230393323-10">)</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">fails</span><span class="p">,</span><span class="n">count</span><span class="p" data-group-id="0230393323-11">(</span><span class="nc">CASE</span><span class="w"> </span><span class="nc">WHEN</span><span class="w"> </span><span class="n">outcome</span><span class="w"> </span><span class="nc">LIKE</span><span class="w"> </span><span class="s">&quot;error%&quot;</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">end</span><span class="p" data-group-id="0230393323-11">)</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">errors</span><span class="p">,</span><span class="n">round</span><span class="p" data-group-id="0230393323-12">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p" data-group-id="0230393323-13">(</span><span class="n">count</span><span class="p" data-group-id="0230393323-14">(</span><span class="nc">CASE</span><span class="w"> </span><span class="n">outcome</span><span class="w"> </span><span class="nc">WHEN</span><span class="w"> </span><span class="s">&quot;succeed&quot;</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">end</span><span class="p" data-group-id="0230393323-14">)</span><span class="p" data-group-id="0230393323-13">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">count</span><span class="p" data-group-id="0230393323-15">(</span><span class="o">*</span><span class="p" data-group-id="0230393323-15">)</span><span class="p" data-group-id="0230393323-12">)</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">success_rate</span><span class="w"> </span><span class="nc">FROM</span><span class="w"> </span><span class="n">logline</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">action_0</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">success_rate</span><span class="w"> </span><span class="n">desc</span><span class="w">
+
+</span><span class="c1"># list average number of times bots perform each action (for the duration of the</span><span class="w">
+</span><span class="n">logs</span><span class="w"> </span><span class="n">queried</span><span class="p">)</span><span class="w">
+</span><span class="p">;</span><span class="n">select</span><span class="w"> </span><span class="n">action_0</span><span class="p">,</span><span class="w"> </span><span class="n">avg</span><span class="p" data-group-id="0230393323-16">(</span><span class="n">runs</span><span class="p" data-group-id="0230393323-16">)</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="p" data-group-id="0230393323-17">(</span><span class="n">select</span><span class="w"> </span><span class="n">bot_id</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p" data-group-id="0230393323-18">(</span><span class="o">*</span><span class="p" data-group-id="0230393323-18">)</span><span class="w"> </span><span class="n">runs</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">logline</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">bot_id</span><span class="p">,</span><span class="w"> </span><span class="n">action_0</span><span class="p" data-group-id="0230393323-17">)</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">action_0</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">avg</span><span class="p" data-group-id="0230393323-19">(</span><span class="n">runs</span><span class="p" data-group-id="0230393323-19">)</span><span class="w"> </span><span class="n">desc</span></code></pre>
+<p><code class="inline">lnav</code> also offers some nice filtering options. For example:</p>
+<pre><code class="nohighlight makeup elixir"><span class="c1"># Show only log lines where with a duration value of 1000ms or larger.</span><span class="w">
+</span><span class="ss">:filter</span><span class="o">-</span><span class="ow">in</span><span class="w"> </span><span class="n">duration</span><span class="o">=</span><span class="err">\</span><span class="n">d</span><span class="p" data-group-id="9241670033-1">{</span><span class="mi">4</span><span class="p">,</span><span class="p" data-group-id="9241670033-1">}</span><span class="n">ms</span></code></pre>
+<h2 id="metrics-schema" class="section-heading">
+  <a href="#metrics-schema" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Metrics schema
+</h2>
+
+<p>During the course of a run a <code class="inline">Bot</code> will generate information pertaining to their
+activity in a system.</p>
+<p>In order to communicate this information with the outside world a <code class="inline">BotManager</code> will
+retain information about an ongoing attack which conforms to the following schema.</p>
+<pre><code class="nohighlight makeup elixir"><span class="p" data-group-id="1100542870-1">{</span><span class="w">
+    </span><span class="ss">bot_count</span><span class="p">:</span><span class="w"> </span><span class="n">...</span><span class="p">,</span><span class="w">
+    </span><span class="ss">total_error_count</span><span class="p">:</span><span class="w"> </span><span class="n">...</span><span class="p">,</span><span class="w">
+    </span><span class="ss">actions</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1100542870-2">{</span><span class="w">
+        </span><span class="o">&lt;</span><span class="n">action_name</span><span class="ss">&gt;</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1100542870-3">{</span><span class="w">
+            </span><span class="n">duration</span><span class="w"> </span><span class="p" data-group-id="1100542870-4">(</span><span class="n">running</span><span class="w"> </span><span class="n">average</span><span class="p" data-group-id="1100542870-4">)</span><span class="p">:</span><span class="w"> </span><span class="n">...</span><span class="p">,</span><span class="w">
+            </span><span class="ss">success_count</span><span class="p">:</span><span class="w"> </span><span class="n">...</span><span class="p">,</span><span class="w">
+            </span><span class="ss">error_count</span><span class="p">:</span><span class="w"> </span><span class="n">...</span><span class="w">
+        </span><span class="p" data-group-id="1100542870-3">}</span><span class="w">
+    </span><span class="p" data-group-id="1100542870-2">}</span><span class="w">
+</span><span class="p" data-group-id="1100542870-1">}</span></code></pre>
+<p>Where <code class="inline">bot_count</code> is expected to change over the course of a run and represents a
+point in time count of the number of bots currently alive.</p>
+<p><code class="inline">actions</code> is a map whose keys are the name of the action and whose value is a map
+containing key value pairs with the following information: The running average
+duration the given action has taken to complete, the number of successful invocations
+of the given action, and the number of errors encountered when running the given
+action.</p>
+<p><code class="inline">total_error_count</code> is the aggregate of all errors reported by the bots. This can be
+used to catch any lurking problems not directly reported via the <code class="inline">actions</code> error
+counts.</p>
+<h2 id="communicating-with-the-bots-from-outside" class="section-heading">
+  <a href="#communicating-with-the-bots-from-outside" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Communicating with the bots from outside
+</h2>
+
+<p>The bots expose a simple HTTP api on port <code class="inline">8124</code>.</p>
+<p>You can use the following routes:</p>
+<ul>
+<li><code class="inline">POST [host]:8124/start</code> (same params as <a href="Mix.Tasks.Bots.Run.html"><code class="inline">mix bots.run</code></a>)
+</li>
+<li><code class="inline">POST [host]:8124/integration/start</code> (same params as <a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>,
+  plus <code class="inline">id</code> and <code class="inline">callback_url</code>)
+</li>
+<li><code class="inline">DELETE [host]:8124/stop</code>
+</li>
+<li><code class="inline">GET [host]:8124/metrics</code>
+</li>
+<li><code class="inline">GET [host]:8124/logs</code>
+</li>
+</ul>
+<h2 id="are-there-tests" class="section-heading">
+  <a href="#are-there-tests" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Are there tests?
+</h2>
+
+<blockquote><p>Who tests the tests?</p>
+</blockquote>
+<p>Some.  Run <code class="inline">make test</code>.</p>
+<h2 id="releases" class="section-heading">
+  <a href="#releases" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Releases
+</h2>
+
+<p>This uses <a href="https://github.com/bitwalker/distillery/">Distillery</a> for building
+releases.</p>
+<p>To build a release (for the system of your development machine), just run
+<code class="inline">MIX_ENV=prod mix release</code>.</p>
+<p>This will generate a bunch of files under <code class="inline">_build</code>.  To deploy, copy
+<code class="inline">_build/prod/rel/bot_army/releases/0.1.0/bot_army.tar.gz</code> to your desired location.</p>
+<p>To run the deployed file, untar it (<code class="inline">tar -xvf bot_army.tar.gz</code>) then run
+<code class="inline">bin/bot_army run_bots --n &lt;number of bots to run&gt;</code>.</p>
+<h3 id="releasing-for-aws-ec2" class="section-heading">
+  <a href="#releasing-for-aws-ec2" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Releasing for AWS EC2
+</h3>
+
+<p>If you want to make a release for another OS system, you can use docker.  There is a
+<code class="inline">Dockerfile</code> set up for running elixir on Linux (for EC2).</p>
+<p>Build the Docker image if needed with <code class="inline">docker build . -t amazon-elixir-bot-army</code>.</p>
+<p>Run <code class="inline">docker run -v $(pwd):/opt/build --rm -it amazon-elixir-bot-army:latest /opt/build/scripts/build_for_docker</code>.</p>
+<p>This will put the tarball release file in
+<code class="inline">rel/artifacts/amazonlinux/bot_army-0.1.0.tar.gz</code>, which you can copy to EC2.</p>
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  
+  </body>
+</html>
+

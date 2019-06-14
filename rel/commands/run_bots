@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set +e
+
+[ "$MC_TEST_CLIENT_SECRET" ] || fail "You must set an environment variable with the IMS client secret as follows:
+
+    export MC_TEST_CLIENT_SECRET=PASTE_HERE
+
+Get the client secret from the IMS stg configuration.  It normally has this pattern: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.
+
+Export the client secret before running this command"
+
+$RELEASE_ROOT_DIR/bin/$REL_NAME start
+
+echo "starting application"
+
+while true; do
+  release_ctl ping --name="$NAME" --cookie="$COOKIE" >/dev/null 2>&1
+  EXIT_CODE=$?
+  if [ $EXIT_CODE -eq 0 ]; then
+    echo "Application is up!"
+    break
+  fi
+done
+
+set -e
+
+echo "starting bots, stop the bots with: \`bin/bot_army stop\`"
+
+echo "activity is written to standard.log, run \`tail -f standard.log\` to watch the botshow"
+
+release_remote_ctl rpc --mfa "Mix.Tasks.RunBotsRelease.run/1" --argv -- "$@"

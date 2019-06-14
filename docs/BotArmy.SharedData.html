@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="project" content="bot_army v0.1.0">
+    <title>BotArmy.SharedData — bot_army v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <script src="dist/sidebar_items-78a9a91697.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+    <div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+bot_army      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+      <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="app-vsn">bot_army v0.1.0</small>
+BotArmy.SharedData              </h1>
+
+
+        <section id="moduledoc">
+<p>While the &quot;context&quot; lets you share state between actions, <code class="inline">SharedData</code> lets you 
+share state between bots.  In addition, it is a central place to hold global data, 
+like runtime config data.</p>
+<p>This module is a simple wrapper around a basic ETS table.  As noted above, the 
+runner tasks/router will store runtime config here as well.</p>
+<p>Note that this does not supply any kind of locking mechanism, so be aware of race 
+conditions.  This is by design for two reasons.  First, config is a read-only use 
+case.  Second, for data-sharing, bots represent users, which operate independently 
+of each other in real life with async data sharing patterns (email, slack).</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#child_spec/1">child_spec(arg)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/1">get(key)</a>
+  </div>
+    <div class="summary-synopsis"><p>Get a value by key (returns <code class="inline">nil</code> if not found)</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put/2">put(key, value)</a>
+  </div>
+    <div class="summary-synopsis"><p>Put a value by key.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/2">update(key, update_fn)</a>
+  </div>
+    <div class="summary-synopsis"><p>Update a value by key. <code class="inline">update_fn</code> is val -&gt; val.</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="child_spec/1">
+    <div class="detail-header">
+    <a href="#child_spec/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">child_spec(arg)</span>
+          </div>
+  <section class="docstring">
+<p>Returns a specification to start this module under a supervisor.</p>
+<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
+  </section>
+</section>
+<section class="detail" id="get/1">
+    <div class="detail-header">
+    <a href="#get/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get(key)</span>
+          </div>
+  <section class="docstring">
+<p>Get a value by key (returns <code class="inline">nil</code> if not found)</p>
+  </section>
+</section>
+<section class="detail" id="put/2">
+    <div class="detail-header">
+    <a href="#put/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">put(key, value)</span>
+          </div>
+  <section class="docstring">
+<p>Put a value by key.</p>
+  </section>
+</section>
+<section class="detail" id="update/2">
+    <div class="detail-header">
+    <a href="#update/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update(key, update_fn)</span>
+          </div>
+  <section class="docstring">
+<p>Update a value by key. <code class="inline">update_fn</code> is val -&gt; val.</p>
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  
+  </body>
+</html>
+

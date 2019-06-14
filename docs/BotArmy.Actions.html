@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="project" content="bot_army v0.1.0">
+    <title>BotArmy.Actions — bot_army v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <script src="dist/sidebar_items-78a9a91697.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+    <div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+bot_army      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+      <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="app-vsn">bot_army v0.1.0</small>
+BotArmy.Actions              </h1>
+
+
+        <section id="moduledoc">
+<p>Generic Actions.</p>
+<p>Actions are functions that take the bot&#39;s context and any supplied arguments, 
+perform some useful side effects, and then return the outcome.  The context is 
+always passed as the first argument.</p>
+<p>Valid outcomes are: <code class="inline">:succeed</code>, <code class="inline">:fail</code>, <code class="inline">:continue</code>, <code class="inline">:done</code> or <code class="inline">{:error, reason}</code>.</p>
+<p><code class="inline">:succeed</code>, <code class="inline">:fail</code>, and <code class="inline">:continue</code> can also be in the form of <code class="inline">{:succeed, key: &quot;value&quot;}</code> if you want save/update the context.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#action/3">action(module, fun, args \\ [])</a>
+  </div>
+    <div class="summary-synopsis"><p>A semantic helper to define actions in your behavior tree.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#done/1">done(_)</a>
+  </div>
+    <div class="summary-synopsis"><p>This will stop the bot from running (by default bots &quot;loop&quot; continously through 
+their behavior trees</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#error/2">error(_, reason)</a>
+  </div>
+    <div class="summary-synopsis"><p>Signal that this bot has errored, causing the bot&#39;s process to die with the given 
+reason.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#log/2">log(context, message)</a>
+  </div>
+    <div class="summary-synopsis"><p>A helpful way to &quot;tap&quot; the flow of the behavior tree for debugging.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#succeed_rate/2">succeed_rate(context, rate)</a>
+  </div>
+    <div class="summary-synopsis"><p>Given a rate as a percentage, this will succeed that percent of the time, and fail 
+otherwise.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#wait/2">wait(context, s \\ 5)</a>
+  </div>
+    <div class="summary-synopsis"><p>Makes the calling process wait for the given number of seconds</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#wait/3">wait(context, min, max)</a>
+  </div>
+    <div class="summary-synopsis"><p>Makes the calling process wait for a random number of seconds in the range defined 
+by the given integers min and max</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="action/3">
+  
+    <span id="action/2"></span>
+  <div class="detail-header">
+    <a href="#action/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">action(module, fun, args \\ [])</span>
+          </div>
+  <section class="docstring">
+<p>A semantic helper to define actions in your behavior tree.</p>
+<pre><code class="nohighlight makeup elixir"><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="2353846251-1">(</span><span class="p" data-group-id="2353846251-2">[</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="n">action</span><span class="p" data-group-id="2353846251-3">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2353846251-4">[</span><span class="mi">5</span><span class="p" data-group-id="2353846251-4">]</span><span class="p" data-group-id="2353846251-3">)</span><span class="p">,</span><span class="w">
+  </span><span class="n">...</span><span class="w">
+  </span><span class="n">action</span><span class="p" data-group-id="2353846251-5">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:done</span><span class="p" data-group-id="2353846251-5">)</span><span class="w">
+</span><span class="p" data-group-id="2353846251-2">]</span><span class="p" data-group-id="2353846251-1">)</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="done/1">
+    <div class="detail-header">
+    <a href="#done/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">done(_)</span>
+          </div>
+  <section class="docstring">
+<p>This will stop the bot from running (by default bots &quot;loop&quot; continously through 
+their behavior trees</p>
+  </section>
+</section>
+<section class="detail" id="error/2">
+    <div class="detail-header">
+    <a href="#error/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">error(_, reason)</span>
+          </div>
+  <section class="docstring">
+<p>Signal that this bot has errored, causing the bot&#39;s process to die with the given 
+reason.</p>
+  </section>
+</section>
+<section class="detail" id="log/2">
+    <div class="detail-header">
+    <a href="#log/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">log(context, message)</span>
+          </div>
+  <section class="docstring">
+<p>A helpful way to &quot;tap&quot; the flow of the behavior tree for debugging.</p>
+  </section>
+</section>
+<section class="detail" id="succeed_rate/2">
+    <div class="detail-header">
+    <a href="#succeed_rate/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">succeed_rate(context, rate)</span>
+          </div>
+  <section class="docstring">
+<p>Given a rate as a percentage, this will succeed that percent of the time, and fail 
+otherwise.</p>
+<p>For example <code class="inline">succeed_rate(context, 0.25)</code> will succeed on average 1 our of 4 tries.</p>
+  </section>
+</section>
+<section class="detail" id="wait/2">
+  
+    <span id="wait/1"></span>
+  <div class="detail-header">
+    <a href="#wait/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">wait(context, s \\ 5)</span>
+          </div>
+  <section class="docstring">
+<p>Makes the calling process wait for the given number of seconds</p>
+  </section>
+</section>
+<section class="detail" id="wait/3">
+    <div class="detail-header">
+    <a href="#wait/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">wait(context, min, max)</span>
+          </div>
+  <section class="docstring">
+<p>Makes the calling process wait for a random number of seconds in the range defined 
+by the given integers min and max</p>
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  
+  </body>
+</html>
+
