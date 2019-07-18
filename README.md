@@ -163,20 +163,6 @@ You can use the following routes:
 
 Some.  Run `make test`.
 
-## Releases
-
-This uses [Distillery](https://github.com/bitwalker/distillery/) for building
-releases.
-
-To build a release (for the system of your development machine), just run
-`MIX_ENV=prod mix release`.
-
-This will generate a bunch of files under `_build`.  To deploy, copy
-`_build/prod/rel/bot_army/releases/0.1.0/bot_army.tar.gz` to your desired location.
-
-To run the deployed file, untar it (`tar -xvf bot_army.tar.gz`) then run
-`bin/bot_army run_bots --n <number of bots to run>`.
-
 ### Releasing for AWS EC2
 
 If you want to make a release for another OS system, you can use docker.  There is a
