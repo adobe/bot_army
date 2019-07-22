@@ -1,12 +1,12 @@
-defmodule Mix.Tasks.RunBotsRelease do
+defmodule Mix.Tasks.LoadTestRelease do
   @moduledoc """
   Intended to be used with Distillery releases, not invoked directly, see 
-  `Mix.Tasks.RunBots` to run locally and for docs.  There is also an http route 
+  `Mix.Tasks.LoadTest` to run locally and for docs.  There is also an http route 
   option.
 
   """
   use Mix.Task
-  alias BotArmy.BotManager
+  alias BotArmy.LoadTest
   alias Mix.Tasks.Bots.Helpers
 
   def run(args) do
@@ -47,6 +47,6 @@ defmodule Mix.Tasks.RunBotsRelease do
 
     Helpers.save_custom_config(flags)
 
-    BotManager.run(%{n: num, tree: tree_mod.tree(), bot: bot_mod})
+    LoadTest.run(%{n: num, tree: tree_mod.tree(), bot: bot_mod})
   end
 end

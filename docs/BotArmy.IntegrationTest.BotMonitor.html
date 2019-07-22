@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="bot_army v0.1.0">
-    <title>BotArmy.BotManager — bot_army v0.1.0</title>
+    <title>BotArmy.IntegrationTest.BotMonitor — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-f11b821dfe.js"></script>
+    <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -68,19 +68,11 @@ bot_army      </a>
 
       <h1>
         <small class="app-vsn">bot_army v0.1.0</small>
-BotArmy.BotManager              </h1>
+BotArmy.IntegrationTest.BotMonitor              </h1>
 
 
         <section id="moduledoc">
-<p>Handles starting up the right number of bots and managing their lifecycle.</p>
-<p>Don&#39;t use this directly, use one of the provided mix tasks:</p>
-<ul>
-<li><a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>      run the integration tests
-</li>
-<li><a href="Mix.Tasks.Bots.Run.html"><code class="inline">mix bots.run</code></a>                   Interactive loadtesting shell
-</li>
-</ul>
-<p>See the documentation for them for required params.</p>
+<p>watches the bots for the runner, reporting any succeeding or failing tests.</p>
         </section>
 
         <section id="summary" class="details-list">
@@ -103,11 +95,6 @@ BotArmy.BotManager              </h1>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_bot_count/0">get_bot_count()</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#init/1">init(state)</a>
   </div>
     <div class="summary-synopsis"><p>Invoked when the server is started. <code class="inline">start_link/3</code> or <code class="inline">start/3</code> will
@@ -115,31 +102,13 @@ block until it returns.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#integration_test/1">integration_test(opts)</a>
+    <a href="#monitor/1">monitor(pid)</a>
   </div>
-    <div class="summary-synopsis"><p>Allows the bots to be ran as an integration test, reporting the results.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#one_off/1">one_off(opts)</a>
-  </div>
-    <div class="summary-synopsis"><p>Run just one bot and stop when finished.  Useful for testing a bot out, or running 
-a bot as a &quot;task.&quot;</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#run/1">run(opts)</a>
-  </div>
-    <div class="summary-synopsis"><p>The way to start up bots.</p></div>
+    <div class="summary-synopsis"><p>Pass a pid to monitor, returns the ref</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#start_link/1">start_link(opts \\ [])</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#stop/0">stop()</a>
   </div>
 </div>
   </div>
@@ -164,17 +133,6 @@ Functions          </h1>
   <section class="docstring">
 <p>Returns a specification to start this module under a supervisor.</p>
 <p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="get_bot_count/0">
-    <div class="detail-header">
-    <a href="#get_bot_count/0" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">get_bot_count()</span>
-          </div>
-  <section class="docstring">
   </section>
 </section>
 <section class="detail" id="init/1">
@@ -224,78 +182,16 @@ entering the loop or calling <code class="inline">c:terminate/2</code>.</p>
 <p>Callback implementation for <a href="https://hexdocs.pm/elixir/GenServer.html#c:init/1"><code class="inline">GenServer.init/1</code></a>.</p>
   </section>
 </section>
-<section class="detail" id="integration_test/1">
+<section class="detail" id="monitor/1">
     <div class="detail-header">
-    <a href="#integration_test/1" class="detail-link" title="Link to this function">
+    <a href="#monitor/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">integration_test(opts)</span>
+    <h1 class="signature">monitor(pid)</span>
           </div>
   <section class="docstring">
-<p>Allows the bots to be ran as an integration test, reporting the results.</p>
-<p>Opts map:</p>
-<ul>
-<li><code class="inline">tree</code> - [required] the behavior tree for the bots to use
-</li>
-<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
-uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
-</li>
-<li><code class="inline">callback</code> - [required] a function that will be called with the result of the 
-test, which will either be <code class="inline">:ok</code> or <code class="inline">{:error, &lt;reason&gt;}</code>.
-</li>
-</ul>
-<p>The <code class="inline">tree</code> will be ran as a &quot;one off&quot;.
-TODO run features in parallel</p>
-  </section>
-</section>
-<section class="detail" id="one_off/1">
-    <div class="detail-header">
-    <a href="#one_off/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">one_off(opts)</span>
-          </div>
-  <section class="docstring">
-<p>Run just one bot and stop when finished.  Useful for testing a bot out, or running 
-a bot as a &quot;task.&quot;</p>
-<p>Opts map:</p>
-<ul>
-<li><code class="inline">tree</code> - [required] the behavior tree for the bots to use
-</li>
-<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
-uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
-</li>
-</ul>
-<p>This wraps the provided tree so that it either errors if it fails, or performs 
-<code class="inline">BotArmy.Actions.done</code> if it succeeds.  This  guarantees the tree won&#39;t run more 
-  than once (unless you intentionally create a loop using one of the <code class="inline">repeat</code> </p>
-<pre><code class="nohighlight makeup elixir"><span class="n">nodes</span><span class="p">)</span><span class="o">.</span></code></pre>
-  </section>
-</section>
-<section class="detail" id="run/1">
-    <div class="detail-header">
-    <a href="#run/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">run(opts)</span>
-          </div>
-  <section class="docstring">
-<p>The way to start up bots.</p>
-<p>Opts map:</p>
-<ul>
-<li><code class="inline">n</code> - [optional] the number of bots to start up (defaults to 1)
-</li>
-<li><code class="inline">tree</code> - [required] the behavior tree for the bots to use
-</li>
-<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
-uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
-</li>
-</ul>
-<p>Note that you cannot call this if bots are already running (call <code class="inline">BotManager.stop</code> 
-first).</p>
+<p>Pass a pid to monitor, returns the ref</p>
   </section>
 </section>
 <section class="detail" id="start_link/1">
@@ -307,17 +203,6 @@ first).</p>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">start_link(opts \\ [])</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="stop/0">
-    <div class="detail-header">
-    <a href="#stop/0" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">stop()</span>
           </div>
   <section class="docstring">
   </section>

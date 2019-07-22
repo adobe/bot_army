@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="bot_army v0.1.0">
-    <title>BotArmy.Router — bot_army v0.1.0</title>
+    <title>BotArmy.IntegrationTest.Workflow — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
     <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
@@ -68,12 +68,21 @@ bot_army      </a>
 
       <h1>
         <small class="app-vsn">bot_army v0.1.0</small>
-BotArmy.Router              </h1>
+BotArmy.IntegrationTest.Workflow <small>behaviour</small>              </h1>
 
 
         <section id="moduledoc">
-<p>The exposed HTTP routes for communiating with the bots.</p>
-<p>The parameters are similar to the docs in the mix tasks under <code class="inline">mix/tasks</code>.</p>
+<p>A behaviour to implement when defining an integration test run.</p>
+<p>This behaviour allows defining multiple trees to run in parallel, as well as a 
+&quot;pre&quot; and &quot;post&quot; tree.</p>
+<p>For example, a &quot;pre&quot; tree might check the server health and obtain a log in token 
+to store in <a href="BotArmy.SharedData.html"><code class="inline">BotArmy.SharedData</code></a>.  Then multiple trees could use the same token to 
+run various tests in parallel.  Finally, a &quot;post&quot; tree could do a final check or 
+cleanup.</p>
+<p>Note that each parallel tree will be run by a new bot instance.  Keep race 
+conditions in mind if your tests make use of the same resource.  If any tree fails 
+(including the pre and post trees), the entire run will fail.  The post tree will 
+always run, even if prior trees fail</p>
         </section>
 
         <section id="summary" class="details-list">
@@ -84,55 +93,89 @@ BotArmy.Router              </h1>
             </a>
             Summary
           </h1>
-  <div class="summary-functions summary">
+  <div class="summary-callbacks summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#callbacks">Callbacks</a>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#c:parallel/0">parallel()</a>
   </div>
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Required.  A map of trees which will each be run in parallel with their own bot.<br>The key is used for reporting.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#c:post/0">post()</a>
   </div>
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p></div>
+    <div class="summary-synopsis"><p>Optional.  A tree to run after all other trees in this run have completed, or if 
+any tree fails.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:pre/0">pre()</a>
+  </div>
+    <div class="summary-synopsis"><p>Optional.  A tree to run before doing anything else in this run.</p></div>
 </div>
   </div>
         </section>
 
-        <section id="functions" class="details-list">
+        <section id="callbacks" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#callbacks">
               <span class="icon-link" aria-hidden="true"></span>
               <span class="sr-only">Link to this section</span>
             </a>
-Functions          </h1>
-          <div class="functions-list">
-<section class="detail" id="call/2">
+Callbacks          </h1>
+          <div class="callbacks-list">
+<section class="detail" id="c:parallel/0">
     <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#c:parallel/0" class="detail-link" title="Link to this callback">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this callback</span>
     </a>
-    <h1 class="signature">call(conn, opts)</span>
-          </div>
+    <h1 class="signature">parallel()</span>
+        
+      <div class="specs">
+          <pre>parallel() :: %{required(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) => <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()}</pre>
+      </div>
+  </div>
   <section class="docstring">
-<p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
+<p>Required.  A map of trees which will each be run in parallel with their own bot.<br>The key is used for reporting.</p>
   </section>
 </section>
-<section class="detail" id="init/1">
+<section class="detail" id="c:post/0">
     <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#c:post/0" class="detail-link" title="Link to this callback">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this callback</span>
     </a>
-    <h1 class="signature">init(opts)</span>
-          </div>
+    <h1 class="signature">post()</span>
+        
+      <div class="specs">
+          <pre>post() :: <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+      </div>
+  </div>
   <section class="docstring">
-<p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
+<p>Optional.  A tree to run after all other trees in this run have completed, or if 
+any tree fails.</p>
+<p>This is useful for tear down or testing postconditions.</p>
+  </section>
+</section>
+<section class="detail" id="c:pre/0">
+    <div class="detail-header">
+    <a href="#c:pre/0" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">pre()</span>
+        
+      <div class="specs">
+          <pre>pre() :: <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Optional.  A tree to run before doing anything else in this run.</p>
+<p>This is useful for set up or testing preconditions.</p>
   </section>
 </section>
           </div>

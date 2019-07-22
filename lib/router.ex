@@ -10,12 +10,12 @@ defmodule BotArmy.Router do
   plug(Plug.Parsers, parsers: [:json], pass: ["application/json"], json_decoder: Jason)
   alias BotArmy.Metrics.Export
   alias Mix.Tasks.Bots.Helpers
-  alias BotArmy.BotManager
+  alias BotArmy.{IntegrationTest, LoadTest}
 
   plug(:match)
   plug(:dispatch)
 
-  post "/start" do
+  post "/load_test/start" do
     %{
       "n" => num,
       "tree" => tree,
@@ -27,12 +27,12 @@ defmodule BotArmy.Router do
     tree_mod = Helpers.get_tree_mod(tree: tree)
     Helpers.save_custom_config(custom: custom)
 
-    BotManager.run(%{n: num, tree: tree_mod.tree(), bot: bot_mod})
+    LoadTest.run(%{n: num, tree: tree_mod.tree(), bot: bot_mod})
 
     send_resp(conn, 200, "Bots started")
   end
 
-  post "/integration/start" do
+  post "/integration_test/start" do
     %{
       "id" => id,
       "callback_url" => callback_url,
@@ -45,7 +45,7 @@ defmodule BotArmy.Router do
     tree_mod = Helpers.get_tree_mod(tree: tree)
     Helpers.save_custom_config(custom: custom)
 
-    BotManager.integration_test(%{
+    IntegrationTest.run(%{
       id: id,
       tree: tree_mod.tree(),
       bot: bot_mod,
@@ -57,8 +57,13 @@ defmodule BotArmy.Router do
     send_resp(conn, 200, "Bots started")
   end
 
-  delete "/stop" do
-    BotManager.stop()
+  delete "/load_test/stop" do
+    LoadTest.stop()
+    send_resp(conn, 200, "Bots stopped")
+  end
+
+  delete "/integration_test/stop" do
+    IntegrationTest.stop()
     send_resp(conn, 200, "Bots stopped")
   end
 

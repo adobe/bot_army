@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.Bot — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-f11b821dfe.js"></script>
+    <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -113,9 +113,8 @@ modify it in your handlers as necessary.  If you implement <code class="inline">
 will be the starting state, so you can merge your state into that, but must return 
 it.  Again, please be mindful not to overwrite the following keys in the state: 
 <code class="inline">id</code>, <code class="inline">bt</code>, <code class="inline">start_time</code>.</p>
-<p>IMPORTANT - if you do extend Bot, you must let the <code class="inline">BotManager</code> know about your 
-module by including it in the <code class="inline">bot</code> param when starting a run (see the docs in the 
-mix tasks and <a href="BotArmy.BotManager.html"><code class="inline">BotArmy.BotManager</code></a>).</p>
+<p>IMPORTANT - if you do extend Bot, you must set the <code class="inline">bot</code> param when starting a run 
+(see the docs in the mix tasks).</p>
         </section>
 
         <section id="summary" class="details-list">

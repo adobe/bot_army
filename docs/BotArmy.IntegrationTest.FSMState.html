@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="bot_army v0.1.0">
-    <title>BotArmy.SharedData — bot_army v0.1.0</title>
+    <title>BotArmy.IntegrationTest.FSMState — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
     <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
@@ -68,20 +68,9 @@ bot_army      </a>
 
       <h1>
         <small class="app-vsn">bot_army v0.1.0</small>
-BotArmy.SharedData              </h1>
+BotArmy.IntegrationTest.FSMState <small>protocol</small>              </h1>
 
 
-        <section id="moduledoc">
-<p>While the &quot;context&quot; lets you share state between actions, <code class="inline">SharedData</code> lets you 
-share state between bots.  In addition, it is a central place to hold global data, 
-like runtime config data.</p>
-<p>This module is a simple wrapper around a basic ETS table.  As noted above, the 
-runner tasks/router will store runtime config here as well.</p>
-<p>Note that this does not supply any kind of locking mechanism, so be aware of race 
-conditions.  This is by design for two reasons.  First, config is a read-only use 
-case.  Second, for data-sharing, bots represent users, which operate independently 
-of each other in real life with async data sharing patterns (email, slack).</p>
-        </section>
 
         <section id="summary" class="details-list">
           <h1 class="section-heading">
@@ -91,37 +80,99 @@ of each other in real life with async data sharing patterns (email, slack).</p>
             </a>
             Summary
           </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:transition_response/0">transition_response()</a>
+  </div>
+    <div class="summary-synopsis"><p>Response from a state specifying which state to transition to (or to keep the current 
+state), and the response to send to the caller, and the new state.</p></div>
+</div>
+  </div>
   <div class="summary-functions summary">
     <h2>
       <a href="#functions">Functions</a>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#child_spec/1">child_spec(arg)</a>
+    <a href="#on_enter/2">on_enter(fsm_state, state)</a>
   </div>
-    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor.</p></div>
+    <div class="summary-synopsis"><p>work to do upon entering a state</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get/1">get(key)</a>
+    <a href="#run/3">run(fsm_state, opts, state)</a>
   </div>
-    <div class="summary-synopsis"><p>Get a value by key (returns <code class="inline">nil</code> if not found)</p></div>
+    <div class="summary-synopsis"><p>start a new test run</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#put/2">put(key, value)</a>
+    <a href="#test_failed/4">test_failed(fsm_state, test_ref, reason, state)</a>
   </div>
-    <div class="summary-synopsis"><p>Put a value by key.</p></div>
+    <div class="summary-synopsis"><p>test failed</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update/2">update(key, update_fn)</a>
+    <a href="#test_succeeded/3">test_succeeded(fsm_state, test_ref, state)</a>
   </div>
-    <div class="summary-synopsis"><p>Update a value by key. <code class="inline">update_fn</code> is val -&gt; val.</p></div>
+    <div class="summary-synopsis"><p>test passed</p></div>
 </div>
   </div>
         </section>
 
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:t/0">
+    <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">t()</span>
+        
+      <div class="specs">
+          <pre>t() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+<section class="detail" id="t:transition_response/0">
+    <div class="detail-header">
+    <a href="#t:transition_response/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">transition_response()</span>
+        
+      <div class="specs">
+          <pre>transition_response() ::
+  {:next_fsm_state, fsm_state :: <a href="BotArmy.IntegrationTest.FSMState.html#t:t/0">BotArmy.IntegrationTest.FSMState.t</a>(),
+   response :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>(), <a href="BotArmy.IntegrationTest.html#t:t/0">BotArmy.IntegrationTest.t</a>()}
+  | {:keep_fsm_state, response :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>(), <a href="BotArmy.IntegrationTest.html#t:t/0">BotArmy.IntegrationTest.t</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Response from a state specifying which state to transition to (or to keep the current 
+state), and the response to send to the caller, and the new state.</p>
+  </section>
+</section>
+          </div>
+        </section>
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
@@ -130,53 +181,52 @@ of each other in real life with async data sharing patterns (email, slack).</p>
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="child_spec/1">
+<section class="detail" id="on_enter/2">
     <div class="detail-header">
-    <a href="#child_spec/1" class="detail-link" title="Link to this function">
+    <a href="#on_enter/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">child_spec(arg)</span>
+    <h1 class="signature">on_enter(fsm_state, state)</span>
           </div>
   <section class="docstring">
-<p>Returns a specification to start this module under a supervisor.</p>
-<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
+<p>work to do upon entering a state</p>
   </section>
 </section>
-<section class="detail" id="get/1">
+<section class="detail" id="run/3">
     <div class="detail-header">
-    <a href="#get/1" class="detail-link" title="Link to this function">
+    <a href="#run/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">get(key)</span>
+    <h1 class="signature">run(fsm_state, opts, state)</span>
           </div>
   <section class="docstring">
-<p>Get a value by key (returns <code class="inline">nil</code> if not found)</p>
+<p>start a new test run</p>
   </section>
 </section>
-<section class="detail" id="put/2">
+<section class="detail" id="test_failed/4">
     <div class="detail-header">
-    <a href="#put/2" class="detail-link" title="Link to this function">
+    <a href="#test_failed/4" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">put(key, value)</span>
+    <h1 class="signature">test_failed(fsm_state, test_ref, reason, state)</span>
           </div>
   <section class="docstring">
-<p>Put a value by key.</p>
+<p>test failed</p>
   </section>
 </section>
-<section class="detail" id="update/2">
+<section class="detail" id="test_succeeded/3">
     <div class="detail-header">
-    <a href="#update/2" class="detail-link" title="Link to this function">
+    <a href="#test_succeeded/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">update(key, update_fn)</span>
+    <h1 class="signature">test_succeeded(fsm_state, test_ref, state)</span>
           </div>
   <section class="docstring">
-<p>Update a value by key. <code class="inline">update_fn</code> is val -&gt; val.</p>
+<p>test passed</p>
   </section>
 </section>
           </div>

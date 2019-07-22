@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>mix bots.integration_test — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-f11b821dfe.js"></script>
+    <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -79,8 +79,8 @@ appropriate exit code.  </p>
 <li><code class="inline">v</code> - [optional] &quot;Verbose&quot;, this will log more and print out all bot actions to 
 the console (in addition to the log file).  Recommended on CI to help debug.
 </li>
-<li><code class="inline">tree</code> - [required] The full name of the module defining the integration test 
-tree (must be in scope).  Must expose the function <code class="inline">tree/0</code>.  Ex: 
+<li><code class="inline">workflow</code> - [required] The full name of the module defining the integration 
+workflow (must be in scope).  Must implement <a href="BotArmy.IntegrationTest.Workflow.html"><code class="inline">BotArmy.IntegrationTest.Workflow</code></a>.  Ex: 
 &quot;MyService.Workflow.Simple&quot;
 </li>
 <li><code class="inline">bot</code> - [optional] A custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 

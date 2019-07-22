@@ -59,9 +59,9 @@ See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more detail
 
 ## Release the bots!
 
-Run the bots with `mix bots.run`:
+Run the bots with `mix bots.load_test`:
 
-    mix bots.run --n 100 --tree MyService.Workflow.Simple
+    mix bots.load_test --n 100 --tree MyService.Workflow.Simple
 
 
 ## Integration testing
@@ -150,10 +150,11 @@ The bots expose a simple HTTP api on port `8124`.
 
 You can use the following routes:
 
-- `POST [host]:8124/start` (same params as `mix bots.run`)
-- `POST [host]:8124/integration/start` (same params as `mix bots.integration_test`,
+- `POST [host]:8124/load_test/start` (same params as `mix bots.load_test`)
+- `POST [host]:8124/integration_test/start` (same params as `mix bots.integration_test`,
   plus `id` and `callback_url`)
-- `DELETE [host]:8124/stop`
+- `DELETE [host]:8124/load_test/stop`
+- `DELETE [host]:8124/integration_test/stop`
 - `GET [host]:8124/metrics`
 - `GET [host]:8124/logs`
 

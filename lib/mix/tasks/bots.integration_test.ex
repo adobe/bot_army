@@ -7,8 +7,8 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
 
   * `v` - [optional] "Verbose", this will log more and print out all bot actions to 
   the console (in addition to the log file).  Recommended on CI to help debug.
-  * `tree` - [required] The full name of the module defining the integration test 
-  tree (must be in scope).  Must expose the function `tree/0`.  Ex: 
+  * `workflow` - [required] The full name of the module defining the integration 
+  workflow (must be in scope).  Must implement `BotArmy.IntegrationTest.Workflow`.  Ex: 
   "MyService.Workflow.Simple"
   * `bot` - [optional] A custom callback module implementing `BotArmy.Bot`, otherwise 
   uses `BotArmy.Bot.Default`
@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
   and other custom code.
   """
   use Mix.Task
-  alias BotArmy.BotManager
+  alias BotArmy.IntegrationTest
   alias Mix.Tasks.Bots.Helpers
 
   @shortdoc "run the integration tests"
@@ -57,33 +57,42 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
           level: :debug,
           metadata: metadata
         ),
-      else: Logger.configure_backend(:console, level: :warn)
+      else:
+        Logger.configure_backend(:console,
+          level: :warn,
+          metadata: [:bot_id, :action]
+        )
 
     bot_mod = Helpers.get_bot_mod(flags)
-    tree_mod = Helpers.get_tree_mod(flags)
+    workflow_mod = Helpers.get_workflow_mod(flags)
 
     IO.puts("Starting integration tests...")
-    IO.puts("USING TREE: #{tree_mod}")
+    IO.puts("USING WORKFLOW: #{workflow_mod}")
     IO.puts("USING BOT: #{bot_mod}")
 
     Helpers.save_custom_config(flags)
 
     pid = self()
 
-    BotManager.integration_test(%{
-      tree: tree_mod.tree(),
-      bot: bot_mod,
-      callback: fn
-        :ok ->
-          IO.puts("\n\nTest SUCCEEDED!!\n")
-          send(pid, :succeed)
+    :ok =
+      IntegrationTest.run(%{
+        workflow: workflow_mod,
+        bot: bot_mod,
+        callback: fn
+          :passed ->
+            IO.puts("\n\nTest SUCCEEDED!!\n")
+            send(pid, :succeed)
 
-        error ->
-          IO.puts("\n\nTest FAILED!!\n")
-          IO.puts(inspect(error))
-          send(pid, :fail)
-      end
-    })
+          {:failed, failures} ->
+            IO.puts("\n\nTest FAILED!!\n")
+
+            Enum.map(failures, fn {test_name, reason} ->
+              IO.puts("Test \"#{test_name}\" failed: #{inspect(reason)}")
+            end)
+
+            send(pid, :fail)
+        end
+      })
 
     receive do
       :succeed ->

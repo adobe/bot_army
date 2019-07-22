@@ -1,14 +1,14 @@
-defmodule BotArmy.BotManager do
+defmodule BotArmy.LoadTest do
   @moduledoc """
-  Handles starting up the right number of bots and managing their lifecycle.
+  Manages a load test run.
 
-  Don't use this directly, use one of the provided mix tasks:
+  Don't use this directly, call from `mix bots.load_test`.  See the documentation for the 
+  available params.
 
-  * `mix bots.integration_test`      run the integration tests
-  * `mix bots.run`                   Interactive loadtesting shell
+  This will start up the target number of bots.  If bots die off, this will restart 
+  them in batches to return to the target number.
 
-  See the documentation for them for required params.
-
+  Bots run until calling `stop`.
   """
 
   require Logger
@@ -25,7 +25,7 @@ defmodule BotArmy.BotManager do
   end
 
   @doc """
-  The way to start up bots.
+  Starts up the bots.
 
   Opts map:
 
@@ -34,7 +34,7 @@ defmodule BotArmy.BotManager do
   * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
   uses `BotArmy.Bot.Default`
 
-  Note that you cannot call this if bots are already running (call `BotManager.stop` 
+  Note that you cannot call this if bots are already running (call `BotArmy.LoadTest.stop` 
   first).
 
   """
@@ -47,44 +47,17 @@ defmodule BotArmy.BotManager do
 
   Opts map:
 
-  * `tree` - [required] the behavior tree for the bots to use
+  * `tree` - [required] the tree defining the work to be done.
   * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
   uses `BotArmy.Bot.Default`
 
   This wraps the provided tree so that it either errors if it fails, or performs 
   `BotArmy.Actions.done` if it succeeds.  This  guarantees the tree won't run more 
-    than once (unless you intentionally create a loop using one of the `repeat` 
-      nodes).
+  than once (unless you intentionally create a loop using one of the `repeat` nodes).
 
   """
   def one_off(%{tree: %BehaviorTree.Node{}} = opts),
     do: GenServer.cast(__MODULE__, {:one_off, opts})
-
-  @doc """
-  Allows the bots to be ran as an integration test, reporting the results.
-
-  Opts map:
-
-  * `tree` - [required] the behavior tree for the bots to use
-  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
-  uses `BotArmy.Bot.Default`
-  * `callback` - [required] a function that will be called with the result of the 
-  test, which will either be `:ok` or `{:error, <reason>}`.
-
-  The `tree` will be ran as a "one off".
-  TODO run features in parallel
-
-  """
-  def integration_test(%{tree: %BehaviorTree.Node{}, callback: callback} = opts)
-      when is_function(callback, 1),
-      do:
-        GenServer.cast(
-          __MODULE__,
-          {
-            :one_off,
-            opts
-          }
-        )
 
   def get_bot_count(), do: GenServer.call(__MODULE__, :get_bot_count)
 
@@ -98,19 +71,18 @@ defmodule BotArmy.BotManager do
        last_id: 0,
        start_time: System.monotonic_time(:millisecond),
        tree: nil,
-       bot: nil,
-       integration_callback: nil
+       bot: nil
      }}
   end
 
   def handle_cast({:run, _opts}, %{bot_count: bot_count} = state) when bot_count > 0 do
-    IO.puts("Warning, you must stop the BotManager first, before trying to start new bots")
+    IO.puts("Warning, you must stop the run first, before trying to start new bots")
     {:noreply, state}
   end
 
   def handle_cast({:run, opts}, state) do
     tree = Map.get(opts, :tree) || raise "No tree supplied"
-    bot = Map.get(opts, :bot)
+    bot = Map.get(opts, :bot, BotArmy.Bot.Default)
     target_count = Map.get(opts, :n) || @default_bot_count
 
     Logger.warn("Starting up #{target_count} bots...")
@@ -122,8 +94,8 @@ defmodule BotArmy.BotManager do
       fn i ->
         {:ok, bot_pid} = start_bot(state.last_id + i, bot)
 
-        Bot.run(bot_pid, tree)
         Process.monitor(bot_pid)
+        Bot.run(bot_pid, tree)
 
         # "preflighting" the first bot seems to "warm up" httpoison and prevent time 
         # outs ¯\_(ツ)_/¯
@@ -150,20 +122,16 @@ defmodule BotArmy.BotManager do
   end
 
   def handle_cast({:one_off, _opts}, %{bot_count: bot_count} = state) when bot_count > 0 do
-    IO.puts(
-      "Warning, a bot is currently running, you must stop the BotManager first, then try again"
-    )
+    IO.puts("Warning, a bot is currently running, you must stop the run first, then try again")
 
     {:noreply, state}
   end
 
   def handle_cast({:one_off, opts}, state) do
-    Logger.warn("Starting a new one-off bot")
+    Logger.warn("Starting a new one-off run")
 
     tree = Map.get(opts, :tree) || raise "No tree supplied"
-    bot = Map.get(opts, :bot)
-
-    {:ok, bot_pid} = start_bot(:one_off, bot)
+    bot = Map.get(opts, :bot, BotArm.Bot.Default)
 
     tree_with_done =
       BehaviorTree.Node.sequence([
@@ -174,16 +142,16 @@ defmodule BotArmy.BotManager do
         Actions.action(Actions, :done)
       ])
 
-    Bot.run(bot_pid, tree_with_done)
+    {:ok, bot_pid} = start_bot(:one_off, bot)
     Process.monitor(bot_pid)
+    Bot.run(bot_pid, tree_with_done)
 
     new_state = %{
       state
       | bot_count: 1,
         start_time: System.monotonic_time(:millisecond),
         tree: tree,
-        bot: bot,
-        integration_callback: Map.get(opts, :callback)
+        bot: bot
     }
 
     {:noreply, new_state}
@@ -230,8 +198,8 @@ defmodule BotArmy.BotManager do
         fn i ->
           {:ok, bot_pid} = start_bot(state.last_id + i, Map.get(state, :bot))
 
-          Bot.run(bot_pid, state.tree)
           Process.monitor(bot_pid)
+          Bot.run(bot_pid, state.tree)
         end
       )
 
@@ -248,7 +216,7 @@ defmodule BotArmy.BotManager do
   end
 
   def handle_info({:DOWN, _ref, :process, _object, :shutdown}, state) do
-    Logger.info("Bot finished work.", bot_count: state.bot_count - 1)
+    Logger.warn("Bot finished work.", bot_count: state.bot_count - 1)
 
     if state.bot_count - 1 == 0,
       do:
@@ -260,36 +228,19 @@ defmodule BotArmy.BotManager do
             |> Timex.format_duration(:humanized)
         )
 
-    with callback when is_function(callback, 1) <- Map.get(state, :integration_callback),
-         do: callback.(:ok)
-
-    {:noreply, %{state | bot_count: state.bot_count - 1}}
-  end
-
-  def handle_info({:DOWN, _ref, :process, _object, {:error, reason} = error}, state) do
-    Logger.error("Bot died due to error", error: reason, bot_count: state.bot_count - 1)
-
-    with callback when is_function(callback, 1) <- Map.get(state, :integration_callback),
-         do: callback.(error)
-
     {:noreply, %{state | bot_count: state.bot_count - 1}}
   end
 
   def handle_info({:DOWN, _ref, :process, _object, reason}, state) do
-    Logger.error("Bot died unexpectedly!", bot_count: state.bot_count - 1)
-
-    with callback when is_function(callback, 1) <- Map.get(state, :integration_callback),
-         do: callback.({:error, reason})
+    Logger.error("Bot died!", error: inspect(reason), bot_count: state.bot_count - 1)
 
     {:noreply, %{state | bot_count: state.bot_count - 1}}
   end
 
   defp start_bot(id, bot_callback_module) do
-    bot_mod = bot_callback_module || Bot.Default
-
     DynamicSupervisor.start_child(
       BotSupervisor,
-      {bot_mod, [id: id]}
+      {bot_callback_module, [id: id]}
     )
   end
 end

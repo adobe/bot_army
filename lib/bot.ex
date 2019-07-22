@@ -54,9 +54,8 @@ defmodule BotArmy.Bot do
   it.  Again, please be mindful not to overwrite the following keys in the state: 
   `id`, `bt`, `start_time`.
 
-  IMPORTANT - if you do extend Bot, you must let the `BotManager` know about your 
-  module by including it in the `bot` param when starting a run (see the docs in the 
-  mix tasks and `BotArmy.BotManager`).
+  IMPORTANT - if you do extend Bot, you must set the `bot` param when starting a run 
+  (see the docs in the mix tasks).
 
   """
 

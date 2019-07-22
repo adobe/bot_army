@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>API Reference — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-f11b821dfe.js"></script>
+    <script src="dist/sidebar_items-04165f8e34.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -100,9 +100,32 @@ functionality or configuration.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="BotArmy.BotManager.html">BotArmy.BotManager</a>
+    <a href="BotArmy.IntegrationTest.html">BotArmy.IntegrationTest</a>
   </div>
-    <div class="summary-synopsis"><p>Handles starting up the right number of bots and managing their lifecycle.</p></div>
+    <div class="summary-synopsis"><p>Manages an integration test run.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="BotArmy.IntegrationTest.BotMonitor.html">BotArmy.IntegrationTest.BotMonitor</a>
+  </div>
+    <div class="summary-synopsis"><p>watches the bots for the runner, reporting any succeeding or failing tests.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="BotArmy.IntegrationTest.FSMState.html">BotArmy.IntegrationTest.FSMState</a>
+  </div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="BotArmy.IntegrationTest.Workflow.html">BotArmy.IntegrationTest.Workflow</a>
+  </div>
+    <div class="summary-synopsis"><p>A behaviour to implement when defining an integration test run.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="BotArmy.LoadTest.html">BotArmy.LoadTest</a>
+  </div>
+    <div class="summary-synopsis"><p>Manages a load test run.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -162,17 +185,17 @@ appropriate exit code.  </p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="Mix.Tasks.Bots.Run.html">mix bots.run</a>
+    <a href="Mix.Tasks.Bots.LoadTest.html">mix bots.load_test</a>
   </div>
     <div class="summary-synopsis"><p>Task to run the bots.  Can call with various flags.  Opens an interactive window to 
 control the bots, and prints a nice summary at the end.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="Mix.Tasks.RunBotsRelease.html">mix run_bots_release</a>
+    <a href="Mix.Tasks.LoadTestRelease.html">mix load_test_release</a>
   </div>
     <div class="summary-synopsis"><p>Intended to be used with Distillery releases, not invoked directly, see 
-<code class="inline">Mix.Tasks.RunBots</code> to run locally and for docs.  There is also an http route 
+<code class="inline">Mix.Tasks.LoadTest</code> to run locally and for docs.  There is also an http route 
 option.</p></div>
 </div>
     </div>

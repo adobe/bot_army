@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Bots.Run do
+defmodule Mix.Tasks.Bots.LoadTest do
   @moduledoc """
   Task to run the bots.  Can call with various flags.  Opens an interactive window to 
   control the bots, and prints a nice summary at the end.
@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Bots.Run do
 
   @shortdoc "Interactive loadtesting shell"
   def run(args) do
-    Mix.Tasks.RunBotsRelease.run(args)
+    Mix.Tasks.LoadTestRelease.run(args)
 
     IO.puts("Bots are running!  Enter 'q' to stop them and exit")
     receive_command()
