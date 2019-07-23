@@ -6,9 +6,6 @@
 erl_crash.dump
 *.ez
 *.beam
-bot_army-*.tar
 tags
-standard.log
 .elixir_ls
-/rel/artifacts/
 .envrc

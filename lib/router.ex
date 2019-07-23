@@ -23,6 +23,8 @@ defmodule BotArmy.Router do
       "custom" => custom
     } = conn.body_params
 
+    start_logs()
+
     bot_mod = Helpers.get_bot_mod(bot: bot)
     tree_mod = Helpers.get_tree_mod(tree: tree)
     Helpers.save_custom_config(custom: custom)
@@ -36,18 +38,19 @@ defmodule BotArmy.Router do
     %{
       "id" => id,
       "callback_url" => callback_url,
-      "tree" => tree,
+      "workflow" => workflow,
       "bot" => bot,
       "custom" => custom
     } = conn.body_params
 
+    start_logs()
+
     bot_mod = Helpers.get_bot_mod(bot: bot)
-    tree_mod = Helpers.get_tree_mod(tree: tree)
+    workflow_mod = Helpers.get_workflow_mod(workflow: workflow)
     Helpers.save_custom_config(custom: custom)
 
     IntegrationTest.run(%{
-      id: id,
-      tree: tree_mod.tree(),
+      workflow: workflow_mod,
       bot: bot_mod,
       callback: fn result ->
         integration_callback(callback_url, %{id: id, result: result})
@@ -80,11 +83,32 @@ defmodule BotArmy.Router do
   end
 
   get "/logs" do
-    send_file(conn, 200, "standard.log")
+    send_file(conn, 200, "bot_run.log")
   end
 
   get "/health" do
     send_resp(conn, 200, "healthy")
+  end
+
+  defp start_logs do
+    metadata = [
+      :bot_id,
+      :action,
+      :outcome,
+      :error,
+      :duration,
+      :uptime,
+      :bot_pid,
+      :bot_count
+    ]
+
+    Logger.add_backend({LoggerFileBackend, :bot_log})
+
+    Logger.configure_backend({LoggerFileBackend, :bot_log},
+      path: "bot_run.log",
+      level: :debug,
+      metadata: metadata
+    )
   end
 
   defp integration_callback(url, %{id: id, result: result}) do
