@@ -73,6 +73,8 @@ your CI pipeline.   You can run the integration tests directly by running
 You can also use the `integration/start` endpoint (see below).  The supplied
 `callback_url` will be POSTed to with the results as `:ok` or `{:error, reason}`.
 
+See `BotArmy.IntegrationTest.Workflow` for how to use.
+
 
 
 ## Logging

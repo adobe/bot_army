@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.IntegrationTest.Workflow — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-04165f8e34.js"></script>
+    <script src="dist/sidebar_items-4365100c0e.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -54,6 +54,7 @@ bot_army      </a>
 
       <li><a id="modules-list" href="#full-list">Modules</a></li>
 
+      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
 
       <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
   </ul>
@@ -83,6 +84,29 @@ cleanup.</p>
 conditions in mind if your tests make use of the same resource.  If any tree fails 
 (including the pre and post trees), the entire run will fail.  The post tree will 
 always run, even if prior trees fail</p>
+<p>You can define each stage directly by implementing the callbacks, or you can use 
+the supplied macros.</p>
+<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyWorkflow</span><span class="w"> </span><span class="k" data-group-id="4746212309-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Workflow</span><span class="w">
+
+  </span><span class="n">pre</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4746212309-2">(</span><span class="n">action</span><span class="p" data-group-id="4746212309-3">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-4">[</span><span class="s">&quot;pre&quot;</span><span class="p" data-group-id="4746212309-4">]</span><span class="p" data-group-id="4746212309-3">)</span><span class="p" data-group-id="4746212309-2">)</span><span class="w">
+
+  </span><span class="n">post</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4746212309-5">(</span><span class="n">action</span><span class="p" data-group-id="4746212309-6">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-7">[</span><span class="s">&quot;post&quot;</span><span class="p" data-group-id="4746212309-7">]</span><span class="p" data-group-id="4746212309-6">)</span><span class="p" data-group-id="4746212309-5">)</span><span class="w">
+
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4746212309-8">(</span><span class="n">action</span><span class="p" data-group-id="4746212309-9">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-10">[</span><span class="s">&quot;first parallel&quot;</span><span class="p" data-group-id="4746212309-10">]</span><span class="p" data-group-id="4746212309-9">)</span><span class="p" data-group-id="4746212309-8">)</span><span class="w">
+
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4746212309-11">(</span><span class="n">action</span><span class="p" data-group-id="4746212309-12">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-13">[</span><span class="mi">0</span><span class="p" data-group-id="4746212309-13">]</span><span class="p" data-group-id="4746212309-12">)</span><span class="p" data-group-id="4746212309-11">)</span><span class="w">
+
+  </span><span class="c1"># do syntax variant</span><span class="w">
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 3&quot;</span><span class="w"> </span><span class="k" data-group-id="4746212309-14">do</span><span class="w">
+    </span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;runtime&quot;</span><span class="w">
+
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="4746212309-15">(</span><span class="p" data-group-id="4746212309-16">[</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4746212309-17">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-18">[</span><span class="n">var</span><span class="p" data-group-id="4746212309-18">]</span><span class="p" data-group-id="4746212309-17">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4746212309-19">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4746212309-20">[</span><span class="mi">0</span><span class="p" data-group-id="4746212309-20">]</span><span class="p" data-group-id="4746212309-19">)</span><span class="w">
+    </span><span class="p" data-group-id="4746212309-16">]</span><span class="p" data-group-id="4746212309-15">)</span><span class="w">
+  </span><span class="k" data-group-id="4746212309-14">end</span><span class="w">
+</span><span class="k" data-group-id="4746212309-1">end</span></code></pre>
         </section>
 
         <section id="summary" class="details-list">
@@ -93,6 +117,30 @@ always run, even if prior trees fail</p>
             </a>
             Summary
           </h1>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parallel/2">parallel(name, contents)</a>
+  </div>
+    <div class="summary-synopsis"><p>A simple way to define each test you want to run in parallel.  Add as many of these 
+as you want in your workflow module.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post/1">post(node)</a>
+  </div>
+    <div class="summary-synopsis"><p>A simple way to define your &quot;post&quot; test.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pre/1">pre(node)</a>
+  </div>
+    <div class="summary-synopsis"><p>A simple way to define your &quot;pre&quot; test.</p></div>
+</div>
+  </div>
   <div class="summary-callbacks summary">
     <h2>
       <a href="#callbacks">Callbacks</a>
@@ -119,6 +167,72 @@ any tree fails.</p></div>
   </div>
         </section>
 
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="parallel/2">
+    <div class="detail-header">
+    <a href="#parallel/2" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature">parallel(name, contents)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
+  <section class="docstring">
+<p>A simple way to define each test you want to run in parallel.  Add as many of these 
+as you want in your workflow module.</p>
+<p>You can specify a name and node, or use do syntax if you need to run other code to 
+set up the tree.</p>
+<pre><code class="nohighlight makeup elixir"><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test xyz&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">xyz_test_node</span><span class="w">
+
+</span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test abc&quot;</span><span class="w"> </span><span class="k" data-group-id="6957046911-1">do</span><span class="w">
+  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">:rand</span><span class="o">.</span><span class="n">uniform</span><span class="p" data-group-id="6957046911-2">(</span><span class="p" data-group-id="6957046911-2">)</span><span class="w">
+  </span><span class="n">abc_test_node</span><span class="p" data-group-id="6957046911-3">(</span><span class="n">n</span><span class="p" data-group-id="6957046911-3">)</span><span class="w">
+</span><span class="k" data-group-id="6957046911-1">end</span></code></pre>
+<p>You must have at least one of these, and all test names must be unique.</p>
+  </section>
+</section>
+<section class="detail" id="post/1">
+    <div class="detail-header">
+    <a href="#post/1" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature">post(node)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
+  <section class="docstring">
+<p>A simple way to define your &quot;post&quot; test.</p>
+<pre><code class="nohighlight makeup elixir"><span class="n">post</span><span class="w"> </span><span class="n">clean_up_tree</span></code></pre>
+<p>This is optional, and may only be defined once.</p>
+  </section>
+</section>
+<section class="detail" id="pre/1">
+    <div class="detail-header">
+    <a href="#pre/1" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature">pre(node)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
+  <section class="docstring">
+<p>A simple way to define your &quot;pre&quot; test.</p>
+<pre><code class="nohighlight makeup elixir"><span class="n">pre</span><span class="w"> </span><span class="n">setup_tree</span></code></pre>
+<p>This is optional, and may only be defined once.</p>
+  </section>
+</section>
+          </div>
+        </section>
         <section id="callbacks" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#callbacks">
