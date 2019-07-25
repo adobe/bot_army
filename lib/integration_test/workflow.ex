@@ -60,6 +60,10 @@ defmodule BotArmy.IntegrationTest.Workflow do
     defexception [:message]
   end
 
+  defmodule NoParallelTestsDefinedError do
+    defexception [:message]
+  end
+
   @doc """
   Optional.  A tree to run before doing anything else in this run.
 
@@ -117,12 +121,12 @@ defmodule BotArmy.IntegrationTest.Workflow do
 
   This is optional, and may only be defined once.
   """
-  defmacro pre(node) do
+  defmacro pre(contents) do
     quote do
       if Module.defines?(__MODULE__, {:pre, 0}) do
         raise ExistingPreError, "pre is already defined"
       else
-        def pre, do: unquote(node)
+        def pre, do: unquote(contents)
       end
     end
   end
@@ -182,12 +186,12 @@ defmodule BotArmy.IntegrationTest.Workflow do
 
         __MODULE__
         |> Module.get_attribute(:parallel_tests)
-        |> Keyword.keys()
-        |> Enum.member?(unquote(name)) ->
+        |> Enum.member?(unquote(:"#{name}")) ->
           raise DuplicateParallelTestNameError, ~s("#{unquote(name)}" is already defined)
 
         :else ->
-          Module.put_attribute(__MODULE__, :parallel_tests, {unquote(name), unquote(contents)})
+          Module.put_attribute(__MODULE__, :parallel_tests, unquote(:"#{name}"))
+          def unquote(:"#{name}")(), do: unquote(contents)
       end
     end
   end
@@ -196,10 +200,13 @@ defmodule BotArmy.IntegrationTest.Workflow do
   defmacro __before_compile__(_) do
     quote do
       unless Module.defines?(__MODULE__, {:parallel, 0}) do
+        if Enum.empty?(@parallel_tests),
+          do: raise(NoParallelTestsDefinedError, "you must define at least one parallel test")
+
         @impl BotArmy.IntegrationTest.Workflow
         def parallel do
-          Enum.reduce(@parallel_tests, %{}, fn {name, node}, acc ->
-            Map.put(acc, name, node)
+          Enum.reduce(@parallel_tests, %{}, fn name, acc ->
+            Map.put(acc, Atom.to_string(name), apply(__MODULE__, name, []))
           end)
         end
       end

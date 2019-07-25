@@ -17,10 +17,7 @@ defmodule Mix.Tasks.Bots.Helpers do
     tree_mod_string = flags |> Keyword.get(:tree)
 
     if is_nil(tree_mod_string),
-      do:
-        raise(
-          "You must specify the module defining the integration tree (Ex: `--tree Test.Integration`)"
-        )
+      do: raise("You must specify the module defining the tree (Ex: `--tree Test.Load`)")
 
     tree_mod = parse_module(tree_mod_string)
 
@@ -37,7 +34,7 @@ defmodule Mix.Tasks.Bots.Helpers do
     if is_nil(workflow_string),
       do:
         raise(
-          "You must specify the module defining the integration tree (Ex: `--tree Test.Integration`)"
+          "You must specify the module defining the integration workflow (Ex: `--workflow Test.Integration.Workflow`)"
         )
 
     workflow_mod = parse_module(workflow_string)

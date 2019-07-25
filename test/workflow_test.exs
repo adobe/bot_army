@@ -69,6 +69,29 @@ defmodule BotArmy.IntegrationTest.WorkflowTest do
              }
   end
 
+  test "using macros with external functions" do
+    defmodule ExternalFunction do
+      use Workflow
+
+      parallel "using external", Node.always_succeed(log("ok"))
+
+      parallel "other" do
+        x = "other"
+        Node.always_succeed(log(x))
+      end
+
+      def log(x) do
+        action(Actions, :log, [x])
+      end
+    end
+
+    assert ExternalFunction.parallel() ==
+             %{
+               "using external" => Node.always_succeed(action(Actions, :log, ["ok"])),
+               "other" => Node.always_succeed(action(Actions, :log, ["other"]))
+             }
+  end
+
   test "prevents adding parallel tests when `def parallel` already exists" do
     assert_raise BotArmy.IntegrationTest.Workflow.ExistingParallelError, fn ->
       defmodule ParallelAlreadyDefined do
@@ -109,5 +132,13 @@ defmodule BotArmy.IntegrationTest.WorkflowTest do
                               Node.always_succeed(action(Actions, :log, ["not ok, same name"]))
                    end
                  end
+  end
+
+  test "errors if no parallel tests defined" do
+    assert_raise BotArmy.IntegrationTest.Workflow.NoParallelTestsDefinedError, fn ->
+      defmodule NoParallel do
+        use Workflow
+      end
+    end
   end
 end
