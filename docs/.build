@@ -1,11 +1,11 @@
-dist/search_items-74605222d2.js
+dist/search_items-37a2bc434d.js
 dist/html-d9f58a6320b5bfa6dd77.css
 dist/html-d9f58a6320b5bfa6dd77.js
 dist/html/fonts/icomoon.eot
 dist/html/fonts/icomoon.svg
 dist/html/fonts/icomoon.ttf
 dist/html/fonts/icomoon.woff
-dist/sidebar_items-d0927cde6f.js
+dist/sidebar_items-87924ab6b3.js
 api-reference.html
 readme.html
 search.html
@@ -28,6 +28,7 @@ BotArmy.IntegrationTest.Workflow.DuplicateParallelTestNameError.html
 BotArmy.IntegrationTest.Workflow.ExistingParallelError.html
 BotArmy.IntegrationTest.Workflow.ExistingPostError.html
 BotArmy.IntegrationTest.Workflow.ExistingPreError.html
+BotArmy.IntegrationTest.Workflow.NoParallelTestsDefinedError.html
 Mix.Tasks.Bots.IntegrationTest.html
 Mix.Tasks.Bots.LoadTest.html
 Mix.Tasks.LoadTestRelease.html
