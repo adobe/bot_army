@@ -89,7 +89,7 @@ defmodule BotArmy.IntegrationTest.Workflow do
     quote do
       @before_compile BotArmy.IntegrationTest.Workflow
 
-      import BotArmy.IntegrationTest.Workflow, only: [pre: 1, post: 1, parallel: 2]
+      import BotArmy.IntegrationTest.Workflow, only: [pre: 1, post: 1, parallel: 2, merge: 1]
 
       Module.register_attribute(__MODULE__, :parallel_tests, accumulate: true)
 
@@ -111,6 +111,52 @@ defmodule BotArmy.IntegrationTest.Workflow do
           )
 
       defoverridable BotArmy.IntegrationTest.Workflow
+    end
+  end
+
+  @doc """
+  Merge multiple workfows together.
+
+  Use in an empty "master run" workflow module.  Pass in a list of workflow module 
+  names, and this will define `pre` as a `Node.sequence` of each merged workflows' 
+  `pre`s, and the same for `post`.  It will also merge all `parallel` tests into one 
+  `parallel` definition.
+
+      defmodule MasterWorkflow do
+        use Workflow
+        merge([Workflow1, Workflow2])
+      end
+
+  """
+  defmacro merge(workflows) do
+    quote do
+      @impl BotArmy.IntegrationTest.Workflow
+      def pre do
+        unquote(workflows)
+        |> Enum.map(fn workflow ->
+          apply(workflow, :pre, [])
+        end)
+        |> Node.sequence()
+      end
+
+      @impl BotArmy.IntegrationTest.Workflow
+      def post do
+        unquote(workflows)
+        |> Enum.map(fn workflow ->
+          apply(workflow, :post, [])
+        end)
+        |> Node.sequence()
+      end
+
+      @impl BotArmy.IntegrationTest.Workflow
+      def parallel do
+        Enum.reduce(unquote(workflows), %{}, fn workflow, acc ->
+          Map.merge(apply(workflow, :parallel, []), acc, fn name, _, _ ->
+            raise DuplicateParallelTestNameError,
+                  "\"#{name}\" parallel test already exists in another workflow, please rename it"
+          end)
+        end)
+      end
     end
   end
 

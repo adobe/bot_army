@@ -141,4 +141,92 @@ defmodule BotArmy.IntegrationTest.WorkflowTest do
       end
     end
   end
+
+  test "merging workflows" do
+    defmodule Workflow1 do
+      use Workflow
+      pre Node.always_succeed(action(Actions, :log, ["Workflow1 pre"]))
+      post Node.always_succeed(action(Actions, :log, ["Workflow1 post"]))
+
+      parallel "Workflow1 test 1",
+               Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 1"]))
+
+      parallel "Workflow1 test 2",
+               Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 2"]))
+    end
+
+    defmodule Workflow2 do
+      use Workflow
+      pre Node.always_succeed(action(Actions, :log, ["Workflow2 pre"]))
+      post Node.always_succeed(action(Actions, :log, ["Workflow2 post"]))
+
+      parallel "Workflow2 test 1",
+               Node.always_succeed(action(Actions, :log, ["Workflow2 parallel 1"]))
+
+      parallel "Workflow2 test 2",
+               Node.always_succeed(action(Actions, :log, ["Workflow2 parallel 2"]))
+    end
+
+    defmodule WorkflowMerged do
+      use Workflow
+      merge([Workflow1, Workflow2])
+    end
+
+    assert WorkflowMerged.pre() ==
+             Node.sequence([
+               Node.always_succeed(action(Actions, :log, ["Workflow1 pre"])),
+               Node.always_succeed(action(Actions, :log, ["Workflow2 pre"]))
+             ])
+
+    assert WorkflowMerged.post() ==
+             Node.sequence([
+               Node.always_succeed(action(Actions, :log, ["Workflow1 post"])),
+               Node.always_succeed(action(Actions, :log, ["Workflow2 post"]))
+             ])
+
+    assert WorkflowMerged.parallel() ==
+             %{
+               "Workflow1 test 1" =>
+                 Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 1"])),
+               "Workflow1 test 2" =>
+                 Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 2"])),
+               "Workflow2 test 1" =>
+                 Node.always_succeed(action(Actions, :log, ["Workflow2 parallel 1"])),
+               "Workflow2 test 2" =>
+                 Node.always_succeed(action(Actions, :log, ["Workflow2 parallel 2"]))
+             }
+  end
+
+  test "merging workflows with duplicate parallel test names errors" do
+    defmodule Workflow1WithDupes do
+      use Workflow
+
+      parallel "abc",
+               Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 1"]))
+
+      parallel "xyz",
+               Node.always_succeed(action(Actions, :log, ["Workflow1 parallel 2"]))
+    end
+
+    defmodule Workflow2WithDupes do
+      use Workflow
+
+      parallel "abc",
+               Node.always_succeed(action(Actions, :log, ["duplicate name as Workflow1!!!"]))
+
+      parallel "something else",
+               Node.always_succeed(action(Actions, :log, ["Workflow2 parallel 2"]))
+    end
+
+    defmodule WorkflowMergedWithDupes do
+      use Workflow
+      merge([Workflow1WithDupes, Workflow2WithDupes])
+    end
+
+    assert_raise BotArmy.IntegrationTest.Workflow.DuplicateParallelTestNameError,
+                 "\"abc\" parallel test already exists in another workflow, please rename it",
+                 fn ->
+                   assert WorkflowMergedWithDupes.parallel() == %{}
+                 end
+  end
 end
