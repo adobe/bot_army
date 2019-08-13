@@ -123,8 +123,8 @@ defmodule BotArmy.IntegrationTest.Workflow do
   `parallel` definition.
 
       defmodule MasterWorkflow do
-        use Workflow
-        merge([Workflow1, Workflow2])
+        use BotArmy.IntegrationTest.Workflow
+        BotArmy.IntegrationTest.Workflow.merge([Workflow1, Workflow2])
       end
 
   """
