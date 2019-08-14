@@ -15,6 +15,19 @@ defmodule BotArmy.Actions do
 
   require Logger
 
+  @typedoc """
+  Actions must return one of these outcomes.
+  """
+  @type outcome ::
+          :succeed
+          | :fail
+          | :continue
+          | :done
+          | {:error, keyword()}
+          | {:succeed, keyword()}
+          | {:fail, keyword()}
+          | {:continue, keyword()}
+
   @doc """
   A semantic helper to define actions in your behavior tree.
 
