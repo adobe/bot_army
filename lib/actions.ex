@@ -23,7 +23,7 @@ defmodule BotArmy.Actions do
           | :fail
           | :continue
           | :done
-          | {:error, keyword()}
+          | {:error, any()}
           | {:succeed, keyword()}
           | {:fail, keyword()}
           | {:continue, keyword()}
