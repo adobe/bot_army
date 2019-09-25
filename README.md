@@ -166,15 +166,3 @@ You can use the following routes:
 
 Some.  Run `make test`.
 
-### Releasing for AWS EC2
-
-If you want to make a release for another OS system, you can use docker.  There is a
-`Dockerfile` set up for running elixir on Linux (for EC2).
-
-Build the Docker image if needed with `docker build . -t amazon-elixir-bot-army`.
-
-Run `docker run -v $(pwd):/opt/build --rm -it amazon-elixir-bot-army:latest
-/opt/build/scripts/build_for_docker`.
-
-This will put the tarball release file in
-`rel/artifacts/amazonlinux/bot_army-0.1.0.tar.gz`, which you can copy to EC2.

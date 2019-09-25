@@ -89,6 +89,17 @@ always passed as the first argument.</p>
             </a>
             Summary
           </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:outcome/0">outcome()</a>
+  </div>
+    <div class="summary-synopsis"><p>Actions must return one of these outcomes.</p></div>
+</div>
+  </div>
   <div class="summary-functions summary">
     <h2>
       <a href="#functions">Functions</a>
@@ -142,6 +153,40 @@ by the given integers min and max</p></div>
   </div>
         </section>
 
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:outcome/0">
+    <div class="detail-header">
+    <a href="#t:outcome/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">outcome()</span>
+        
+      <div class="specs">
+          <pre>outcome() ::
+  :succeed
+  | :fail
+  | :continue
+  | :done
+  | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}
+  | {:succeed, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">keyword</a>()}
+  | {:fail, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">keyword</a>()}
+  | {:continue, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">keyword</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Actions must return one of these outcomes.</p>
+  </section>
+</section>
+          </div>
+        </section>
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
@@ -162,12 +207,12 @@ Functions          </h1>
           </div>
   <section class="docstring">
 <p>A semantic helper to define actions in your behavior tree.</p>
-<pre><code class="nohighlight makeup elixir"><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="6449045456-1">(</span><span class="p" data-group-id="6449045456-2">[</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="8710804015-1">(</span><span class="p" data-group-id="8710804015-2">[</span><span class="w">
   </span><span class="n">...</span><span class="w">
-  </span><span class="n">action</span><span class="p" data-group-id="6449045456-3">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6449045456-4">[</span><span class="mi">5</span><span class="p" data-group-id="6449045456-4">]</span><span class="p" data-group-id="6449045456-3">)</span><span class="p">,</span><span class="w">
+  </span><span class="n">action</span><span class="p" data-group-id="8710804015-3">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8710804015-4">[</span><span class="mi">5</span><span class="p" data-group-id="8710804015-4">]</span><span class="p" data-group-id="8710804015-3">)</span><span class="p">,</span><span class="w">
   </span><span class="n">...</span><span class="w">
-  </span><span class="n">action</span><span class="p" data-group-id="6449045456-5">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:done</span><span class="p" data-group-id="6449045456-5">)</span><span class="w">
-</span><span class="p" data-group-id="6449045456-2">]</span><span class="p" data-group-id="6449045456-1">)</span></code></pre>
+  </span><span class="n">action</span><span class="p" data-group-id="8710804015-5">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:done</span><span class="p" data-group-id="8710804015-5">)</span><span class="w">
+</span><span class="p" data-group-id="8710804015-2">]</span><span class="p" data-group-id="8710804015-1">)</span></code></pre>
   </section>
 </section>
 <section class="detail" id="done/1">
