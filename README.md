@@ -79,7 +79,7 @@ See `BotArmy.IntegrationTest.Workflow` for how to use.
 
 ## Logging
 
-> Logs are shunted to the `./bot_run.log` file.
+> By default, logs are shunted to the `./bot_run.log` file.
 
 It's hard to keep up with thousands of bots.  The logs help, but need to be analyzed
 in meaningful ways.  Using [`lnav`](http://lnav.org) to view the `bot_run.log` file
@@ -109,6 +109,14 @@ for example (note that the key words are auto-derived from the log format):
 
     # Show only log lines where with a duration value of 1000ms or larger.
     :filter-in duration=\d{4,}ms
+
+> Logging Configuration Options
+
+Other logging formats may be useful depending on application.  For example, if logs are output to Splunk or some other log aggregation tooling, it may be beneficial to use JSON-formatted logs rather than a line-by-line representation.
+
+To enable JSON-formatted logs, pass the `--format-json-logs` option when starting your bot run.
+
+To disable log outputs to a file, pass the `--disable-log-file` option when starting your bot run.
 
 ## Metrics schema
 

@@ -1,60 +1,60 @@
 defmodule BotArmy.Bot do
   @moduledoc """
-  A "live" bot that can perform actions described by a behavior tree 
+  A "live" bot that can perform actions described by a behavior tree
   (`BehaviorTree.Node`).
 
-  Bots are just GenServers that continuously tick through the provided behavior tree 
-  until they die or get an outcome of `:done`.  
+  Bots are just GenServers that continuously tick through the provided behavior tree
+  until they die or get an outcome of `:done`.
 
-  Each bot has a "bag of state" called the "context" (sometimes called a "blackboard" 
+  Each bot has a "bag of state" called the "context" (sometimes called a "blackboard"
   in behaviour tree terminology), which is used to pass values between actions.
 
-  Bots ingest actions (the leaf nodes of the tree) in the form of MFA tuples.  The 
-  function will be called with the current context and any provided arguments. The 
-  function must return an outcome, and may also return key-value pairs to 
-  store/update in the context. 
+  Bots ingest actions (the leaf nodes of the tree) in the form of MFA tuples.  The
+  function will be called with the current context and any provided arguments. The
+  function must return an outcome, and may also return key-value pairs to
+  store/update in the context.
 
   See the [README](readme.html#behavior-what) for an example.
 
-  Accepted outcomes are: `:succeed`, `:fail`, `:continue`, `:done` or `{:error, 
+  Accepted outcomes are: `:succeed`, `:fail`, `:continue`, `:done` or `{:error,
   reason}`.
-  `:succeed`, `:fail` and `:continue` can also be in the form of `{:succeed, key: 
+  `:succeed`, `:fail` and `:continue` can also be in the form of `{:succeed, key:
   "value"}` if you want save/update the context.
 
-  `:succeed` and `:fail` will advance the tree via `BehaviorTree`, while `:continue` 
-  will leave the tree as it is for the next tick (this can be useful for example for 
-  attempting an action multiple times with a sleep and a "max tries" counter in the 
-  context). `:done` stops the bot process successfully, and `{:error, reason}` kills 
+  `:succeed` and `:fail` will advance the tree via `BehaviorTree`, while `:continue`
+  will leave the tree as it is for the next tick (this can be useful for example for
+  attempting an action multiple times with a sleep and a "max tries" counter in the
+  context). `:done` stops the bot process successfully, and `{:error, reason}` kills
   the bot process with the provided reason.
 
-  Note the following keys are reserved, and should not be overwritten: `id`, `bt`, 
+  Note the following keys are reserved, and should not be overwritten: `id`, `bt`,
   `start_time`
 
 
   Extending the Bot
   -----------------
 
-  You can use Bot exactly as it is.  However, if you need to add additional 
+  You can use Bot exactly as it is.  However, if you need to add additional
   functionality to your bots, you can do so.
 
-  `BotArmy.Bot` is actually a behaviour that you can use (`use BotArmy.Bot`) in a 
-  custom callback module.  It has a couple of callbacks for config, logging, and 
-  lifecycle hooks (TODO).  Since Bot itself uses a GenServer, you can also add 
-  GenServer callbacks, such as `init`, or `handle_[call|cast|info]` 
+  `BotArmy.Bot` is actually a behaviour that you can use (`use BotArmy.Bot`) in a
+  custom callback module.  It has a couple of callbacks for config, logging, and
+  lifecycle hooks (TODO).  Since Bot itself uses a GenServer, you can also add
+  GenServer callbacks, such as `init`, or `handle_[call|cast|info]`
   (`format_status/2` is particularly useful).
 
-  For example, you may have a syncing system over websockets that updates the state 
-  in the bot's context.  By extending Bot with some additional handlers, you can add 
+  For example, you may have a syncing system over websockets that updates the state
+  in the bot's context.  By extending Bot with some additional handlers, you can add
   this functionality.
 
-  The aforementioned "context" is just the GenServer's state, so your Actions will 
-  have access to everything there.  You can set up initial state in `init/1`, and 
-  modify it in your handlers as necessary.  If you implement `init/1`, the argument 
-  will be the starting state, so you can merge your state into that, but must return 
-  it.  Again, please be mindful not to overwrite the following keys in the state: 
+  The aforementioned "context" is just the GenServer's state, so your Actions will
+  have access to everything there.  You can set up initial state in `init/1`, and
+  modify it in your handlers as necessary.  If you implement `init/1`, the argument
+  will be the starting state, so you can merge your state into that, but must return
+  it.  Again, please be mindful not to overwrite the following keys in the state:
   `id`, `bt`, `start_time`.
 
-  IMPORTANT - if you do extend Bot, you must set the `bot` param when starting a run 
+  IMPORTANT - if you do extend Bot, you must set the `bot` param when starting a run
   (see the docs in the mix tasks).
 
   """
@@ -119,10 +119,10 @@ defmodule BotArmy.Bot do
 
       @impl GenServer
       def terminate(:normal, state) do
-        # TODO maybe callback modules will want to override this?  They could, but 
-        # would lose the logging.  Maybe we add another callback for clean_up/logging 
+        # TODO maybe callback modules will want to override this?  They could, but
+        # would lose the logging.  Maybe we add another callback for clean_up/logging
         # side effects?
-        # need to convert :normal to :shutdown to kill off linked processes (like the 
+        # need to convert :normal to :shutdown to kill off linked processes (like the
         # socketApi)
         {:stop, :shutdown, state}
       end
@@ -139,10 +139,10 @@ defmodule BotArmy.Bot do
   @doc """
   Start up a new bot using the supplied bot implementation.
 
-  Takes a keyword list of options that will be passed to the GenServer.  The 
+  Takes a keyword list of options that will be passed to the GenServer.  The
   following keys are also used:
 
-  * `:id` - [required] an identifier for this specific bot, used for logging 
+  * `:id` - [required] an identifier for this specific bot, used for logging
   purposes.
 
   """
@@ -161,7 +161,7 @@ defmodule BotArmy.Bot do
   @doc """
   Instruct the bot to run the supplied behavior tree.
 
-  Note, the bot will repeatedly loop through the tree unless you include an action 
+  Note, the bot will repeatedly loop through the tree unless you include an action
   that returns `:done`, at which point it will die.
 
   Returns an error tuple if called on a bot that is already running.
@@ -174,7 +174,7 @@ defmodule BotArmy.Bot do
   @doc false
   # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   def tick(callback_mod, %{bt: bt} = state) do
-    # TODO make a `pre_tick` optional_callback for side effects?  Maybe `post_tick` 
+    # TODO make a `pre_tick` optional_callback for side effects?  Maybe `post_tick`
     # with result?
 
     action_mfa = BT.value(bt)
@@ -280,7 +280,7 @@ end
 
 defmodule BotArmy.Bot.Default do
   @moduledoc """
-  The standard bot, implementing the BotArmy.Bot behaviour, without any additional 
+  The standard bot, implementing the BotArmy.Bot behaviour, without any additional
   functionality or configuration.
   """
   use BotArmy.Bot

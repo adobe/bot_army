@@ -1,21 +1,22 @@
 defmodule Mix.Tasks.Bots.LoadTest do
   @moduledoc """
-  Task to run the bots.  Can call with various flags.  Opens an interactive window to 
+  Task to run the bots.  Can call with various flags.  Opens an interactive window to
   control the bots, and prints a nice summary at the end.
 
   Supported arguments:
 
   * `n` number of bots, defaults to 10
-  * `tree` - [required] The full name of the module defining the integration test 
-  tree (must be in scope).  Must expose the function `tree/0`.  Ex: 
+  * `tree` - [required] The full name of the module defining the integration test
+  tree (must be in scope).  Must expose the function `tree/0`.  Ex:
   "MyService.Workflow.Simple"
-  * `bot` - [optional] A custom callback module implementing `BotArmy.Bot`, otherwise 
+  * `bot` - [optional] A custom callback module implementing `BotArmy.Bot`, otherwise
   uses `BotArmy.Bot.Default`
-  * `custom` - [optional] Configs for your custom domain.  You must specify these in 
-  quotes as an Elixir map or keyword list (ex: --custom '[host: "dev"]').  Each 
-  key/value pair will be placed into `BotArmy.SharedDAta` for access in your actions, 
+  * `custom` - [optional] Configs for your custom domain.  You must specify these in
+  quotes as an Elixir map or keyword list (ex: --custom '[host: "dev"]').  Each
+  key/value pair will be placed into `BotArmy.SharedData` for access in your actions,
   and other custom code.
-
+  * `disable-log-file` - [optional] Disables file-based logging.
+  * `format-json-logs` - [optional] BotArmy will output JSON-formatted log entries.
   """
   use Mix.Task
 
@@ -32,7 +33,7 @@ defmodule Mix.Tasks.Bots.LoadTest do
     |> IO.gets()
     |> String.trim()
     |> String.downcase()
-    |> execute_command
+    |> execute_command()
   end
 
   defp execute_command("q") do

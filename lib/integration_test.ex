@@ -2,7 +2,7 @@
 
 defprotocol BotArmy.IntegrationTest.FSMState do
   @typedoc """
-  Response from a state specifying which state to transition to (or to keep the current 
+  Response from a state specifying which state to transition to (or to keep the current
   state), and the response to send to the caller, and the new state.
   """
   @type transition_response ::
@@ -82,10 +82,10 @@ defmodule BotArmy.IntegrationTest do
   @moduledoc """
   Manages an integration test run.
 
-  Don't use this directly, call from `mix bots.integration_test`.  See the 
+  Don't use this directly, call from `mix bots.integration_test`.  See the
   documentation for the available params.
 
-  This will run the "pre" tree first, then the "parallel" trees concurrently, then 
+  This will run the "pre" tree first, then the "parallel" trees concurrently, then
   the "post" tree.  The post tree will always run, even if prior trees fail.
   """
 
@@ -164,12 +164,12 @@ defmodule BotArmy.IntegrationTest do
 
   Opts map:
 
-  * `workflow` - [required] the module defining the work to be done.  Must implement 
+  * `workflow` - [required] the module defining the work to be done.  Must implement
   `BotArmy.IntegrationTest.Workflow`.
-  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
+  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise
   uses `BotArmy.Bot.Default`
-  * `callback` - [required] a function that will be called with the result of the 
-  test, which will either be `:passed` or `{:failed, <failed tests>}` where "failed 
+  * `callback` - [required] a function that will be called with the result of the
+  test, which will either be `:passed` or `{:failed, <failed tests>}` where "failed
   tests" is a list of tuples with test keys and failure reasons.
 
   Returns `:ok` or `{:error, reason}`.
@@ -182,9 +182,9 @@ defmodule BotArmy.IntegrationTest do
   Report montitored bots upon succeeding.
   """
   def test_succeeded(ref) do
-    # NOTE we would prefer this (and the one for test_failed) to be `call`s instead 
-    # of `cast`s, but that opens a potential dead lock if a bot finishes work before 
-    # all of the bots have been started.  If this becomes a problem, consider 
+    # NOTE we would prefer this (and the one for test_failed) to be `call`s instead
+    # of `cast`s, but that opens a potential dead lock if a bot finishes work before
+    # all of the bots have been started.  If this becomes a problem, consider
     # separate monitor per bot, or monitor directly from the runner.
     GenServer.cast(__MODULE__, {:test_succeeded, ref})
   end

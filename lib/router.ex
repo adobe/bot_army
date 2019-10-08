@@ -11,6 +11,7 @@ defmodule BotArmy.Router do
   alias BotArmy.Metrics.Export
   alias Mix.Tasks.Bots.Helpers
   alias BotArmy.{IntegrationTest, LoadTest}
+  alias BotArmy.LogFormatters.JSONLogFormatter
 
   plug(:match)
   plug(:dispatch)
@@ -20,10 +21,11 @@ defmodule BotArmy.Router do
       "n" => num,
       "tree" => tree,
       "bot" => bot,
-      "custom" => custom
+      "custom" => custom,
+      "log_options" => log_opts
     } = conn.body_params
 
-    start_logs()
+    start_logs(log_opts)
 
     bot_mod = Helpers.get_bot_mod(bot: bot)
     tree_mod = Helpers.get_tree_mod(tree: tree)
@@ -40,10 +42,11 @@ defmodule BotArmy.Router do
       "callback_url" => callback_url,
       "workflow" => workflow,
       "bot" => bot,
-      "custom" => custom
+      "custom" => custom,
+      "log_options" => log_opts
     } = conn.body_params
 
-    start_logs()
+    start_logs(log_opts)
 
     bot_mod = Helpers.get_bot_mod(bot: bot)
     workflow_mod = Helpers.get_workflow_mod(workflow: workflow)
@@ -90,9 +93,10 @@ defmodule BotArmy.Router do
     send_resp(conn, 200, "healthy")
   end
 
-  defp start_logs do
+  defp start_logs(opts) do
     metadata = [
       :bot_id,
+      :bot_run_id,
       :action,
       :outcome,
       :error,
@@ -102,13 +106,19 @@ defmodule BotArmy.Router do
       :bot_count
     ]
 
-    Logger.add_backend({LoggerFileBackend, :bot_log})
+    if Map.get(opts, "disable-log-file", "false") == "false" do
+      Logger.add_backend({LoggerFileBackend, :bot_log})
 
-    Logger.configure_backend({LoggerFileBackend, :bot_log},
-      path: "bot_run.log",
-      level: :debug,
-      metadata: metadata
-    )
+      Logger.configure_backend({LoggerFileBackend, :bot_log},
+        path: "bot_run.log",
+        level: :debug,
+        metadata: metadata
+      )
+    end
+
+    if Map.get(opts, "format-json-logs", "false") == "true" do
+      Logger.configure_backend(:console, format: {JSONLogFormatter, :format})
+    end
   end
 
   defp integration_callback(url, %{id: id, result: result}) do
