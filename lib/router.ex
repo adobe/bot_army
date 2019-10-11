@@ -116,6 +116,8 @@ defmodule BotArmy.Router do
       )
     end
 
+    Logger.configure_backend(:console, metadata: metadata, level: :debug)
+
     if Map.get(opts, "format-json-logs", "false") == "true" do
       Logger.configure_backend(:console, format: {JSONLogFormatter, :format})
     end
