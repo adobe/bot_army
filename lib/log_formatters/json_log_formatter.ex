@@ -52,6 +52,8 @@ defmodule BotArmy.LogFormatters.JSONLogFormatter do
       default_log_data
       |> Map.merge(bot_run_log_data)
       |> Map.merge(Map.new(metadata))
+      # pids aren't encodable and we don't really need them anyway
+      |> Map.delete(:bot_pid)
 
     "#{Jason.encode!(log_data)}\n"
   rescue

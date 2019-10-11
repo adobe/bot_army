@@ -47,6 +47,8 @@ defmodule Mix.Tasks.LoadTestRelease do
       )
     end
 
+    Logger.configure_backend(:console, metadata: metadata, level: :debug)
+
     if Keyword.get(log_flags, :format_json_logs) do
       Logger.configure_backend(:console, format: {JSONLogFormatter, :format})
     end

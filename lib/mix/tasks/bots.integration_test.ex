@@ -67,7 +67,7 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
       if Keyword.get(flags, :v) do
         [level: :debug, metadata: metadata]
       else
-        [level: :warn, metadata: [:bot_id, :action, :bot_run_id]]
+        [level: :warn, metadata: [:bot_id, :action, :bot_run_id, :outcome]]
       end
 
     backend_configuration =
