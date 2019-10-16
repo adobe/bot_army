@@ -116,10 +116,5 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
 
       :fail ->
         exit({:shutdown, 1})
-    after
-      5 * 60 * 60 * 1000 ->
-        IO.puts(:stderr, "ERROR - Tests didn't finish after 5 minutes.")
-        exit({:shutdown, 1})
-    end
   end
 end
