@@ -191,7 +191,7 @@ defmodule BotArmy.Bot do
       end
 
     callback_mod.log_action_outcome(action_mfa, duration, outcome)
-    send(BotArmy.Metrics, {:action, action_module, action_fun_atom, duration, outcome})
+    send(BotArmy.EtsMetrics, {:action, action_module, action_fun_atom, duration, outcome})
 
     case result do
       :succeed ->

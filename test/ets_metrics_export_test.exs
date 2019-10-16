@@ -1,18 +1,22 @@
-defmodule BotArmy.MetricsExportTest do
+defmodule BotArmy.EtsMetricsExportTest do
   use ExUnit.Case, async: false
 
   alias BotArmy.Metrics.Export
-  alias BotArmy.Metrics
+  alias BotArmy.EtsMetrics
+
+  @moduletag :ets_metrics
 
   setup _context do
-    Metrics.run(10)
+    EtsMetrics.run(10)
   end
 
   # Note, the reference modules don't actually exist, but they are treated as atoms
   describe "metrics export" do
     test "total_error_count is the sum of all action errors" do
-      send(Metrics, {:action, Actions.Renditions, :join, 212, :error})
-      send(Metrics, {:action, Actions.Renditions, :request, 293, :error})
+      send(EtsMetrics, {:action, Actions.Renditions, :join, 212, :error})
+      send(EtsMetrics, {:action, Actions.Renditions, :request, 293, :error})
+
+      Process.sleep(100)
 
       report = Export.generate_report()
 
@@ -20,8 +24,10 @@ defmodule BotArmy.MetricsExportTest do
     end
 
     test "successful actions are additive" do
-      send(Metrics, {:action, Actions.Asset, :upload_image, 190, :succeed})
-      send(Metrics, {:action, Actions.Asset, :upload_image, 320, :succeed})
+      send(EtsMetrics, {:action, Actions.Asset, :upload_image, 190, :succeed})
+      send(EtsMetrics, {:action, Actions.Asset, :upload_image, 320, :succeed})
+
+      Process.sleep(100)
 
       report = Export.generate_report()
 
@@ -31,8 +37,10 @@ defmodule BotArmy.MetricsExportTest do
     end
 
     test "error actions are additive" do
-      send(Metrics, {:action, Actions.Renditions, :request, 212, :error})
-      send(Metrics, {:action, Actions.Renditions, :request, 293, :error})
+      send(EtsMetrics, {:action, Actions.Renditions, :request, 212, :error})
+      send(EtsMetrics, {:action, Actions.Renditions, :request, 293, :error})
+
+      Process.sleep(100)
 
       report = Export.generate_report()
 

@@ -2,10 +2,10 @@ defmodule BotArmy.LoadTest do
   @moduledoc """
   Manages a load test run.
 
-  Don't use this directly, call from `mix bots.load_test`.  See the documentation for the 
+  Don't use this directly, call from `mix bots.load_test`.  See the documentation for the
   available params.
 
-  This will start up the target number of bots.  If bots die off, this will restart 
+  This will start up the target number of bots.  If bots die off, this will restart
   them in batches to return to the target number.
 
   Bots run until calling `stop`.
@@ -13,7 +13,7 @@ defmodule BotArmy.LoadTest do
 
   require Logger
   use GenServer
-  alias BotArmy.{Bot, Metrics, Actions}
+  alias BotArmy.{Bot, EtsMetrics, Actions}
 
   @default_bot_count 1
 
@@ -31,10 +31,10 @@ defmodule BotArmy.LoadTest do
 
   * `n` - [optional] the number of bots to start up (defaults to 1)
   * `tree` - [required] the behavior tree for the bots to use
-  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
+  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise
   uses `BotArmy.Bot.Default`
 
-  Note that you cannot call this if bots are already running (call `BotArmy.LoadTest.stop` 
+  Note that you cannot call this if bots are already running (call `BotArmy.LoadTest.stop`
   first).
 
   """
@@ -42,17 +42,17 @@ defmodule BotArmy.LoadTest do
     do: GenServer.cast(__MODULE__, {:run, opts})
 
   @doc """
-  Run just one bot and stop when finished.  Useful for testing a bot out, or running 
+  Run just one bot and stop when finished.  Useful for testing a bot out, or running
   a bot as a "task."
 
   Opts map:
 
   * `tree` - [required] the tree defining the work to be done.
-  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise 
+  * `bot` - [optional] a custom callback module implementing `BotArmy.Bot`, otherwise
   uses `BotArmy.Bot.Default`
 
-  This wraps the provided tree so that it either errors if it fails, or performs 
-  `BotArmy.Actions.done` if it succeeds.  This  guarantees the tree won't run more 
+  This wraps the provided tree so that it either errors if it fails, or performs
+  `BotArmy.Actions.done` if it succeeds.  This  guarantees the tree won't run more
   than once (unless you intentionally create a loop using one of the `repeat` nodes).
 
   """
@@ -87,7 +87,7 @@ defmodule BotArmy.LoadTest do
 
     Logger.warn("Starting up #{target_count} bots...")
 
-    Metrics.run(target_count)
+    EtsMetrics.run(target_count)
 
     Enum.each(
       1..target_count,
@@ -97,7 +97,7 @@ defmodule BotArmy.LoadTest do
         Process.monitor(bot_pid)
         Bot.run(bot_pid, tree)
 
-        # "preflighting" the first bot seems to "warm up" httpoison and prevent time 
+        # "preflighting" the first bot seems to "warm up" httpoison and prevent time
         # outs ¯\_(ツ)_/¯
         if i == 1, do: Process.sleep(1000)
       end
@@ -113,7 +113,7 @@ defmodule BotArmy.LoadTest do
         bot: bot
     }
 
-    # TODO this locks in the tree that `run` was called with (restarting dead bots 
+    # TODO this locks in the tree that `run` was called with (restarting dead bots
     # will use this tree) - might be nice to have more flexability here
 
     :timer.send_interval(5000, :check_bot_population)

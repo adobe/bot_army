@@ -3,13 +3,15 @@ defmodule BotArmy.Metrics.Export do
   Formats metrics data for export (via the `/metrics` http endpoint)
   """
 
-  alias BotArmy.Metrics
+  alias BotArmy.{
+    EtsMetrics
+  }
 
   @derive Jason.Encoder
   defstruct bot_count: nil, total_error_count: nil, actions: %{}
 
   def generate_report() do
-    {:ok, %Metrics{actions: actions, n: n}} = Metrics.get_state()
+    [{"metrics", %EtsMetrics{actions: actions, n: n}}] = :ets.lookup(:metrics, "metrics")
 
     total_error_count =
       actions
