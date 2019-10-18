@@ -41,34 +41,42 @@ defmodule BotArmy.EtsMetrics do
     success = if outcome == :succeed, do: 1, else: 0
     error = if outcome == :error, do: 1, else: 0
 
-    case :ets.lookup(:metrics, "metrics") do
-      [{"metrics", metrics}] ->
-        new_actions =
-          Map.update(
-            metrics.actions,
-            "#{module |> Module.split() |> List.last()}.#{action}",
-            %{runs: 1, avg_duration: duration, success_count: success, error_count: error},
-            fn %{
-                 runs: runs,
-                 avg_duration: avg_duration,
-                 success_count: success_count,
-                 error_count: error_count
-               } ->
-              %{
-                runs: runs + 1,
-                avg_duration: running_avg(avg_duration, duration, runs + 1),
-                success_count: success_count + success,
-                error_count: error_count + error
-              }
-            end
-          )
+    try do
+      case :ets.lookup(:metrics, "metrics") do
+        [{"metrics", metrics}] ->
+          new_actions =
+            Map.update(
+              metrics.actions,
+              "#{module |> Module.split() |> List.last()}.#{action}",
+              %{runs: 1, avg_duration: duration, success_count: success, error_count: error},
+              fn %{
+                   runs: runs,
+                   avg_duration: avg_duration,
+                   success_count: success_count,
+                   error_count: error_count
+                 } ->
+                %{
+                  runs: runs + 1,
+                  avg_duration: running_avg(avg_duration, duration, runs + 1),
+                  success_count: success_count + success,
+                  error_count: error_count + error
+                }
+              end
+            )
 
-        new_metrics = Map.put(metrics, :actions, new_actions)
+          new_metrics = Map.put(metrics, :actions, new_actions)
 
-        true = :ets.insert(:metrics, {"metrics", new_metrics})
+          true = :ets.insert(:metrics, {"metrics", new_metrics})
 
-      _ ->
-        nil
+        _ ->
+          nil
+      end
+    rescue
+      e in ArgumentError ->
+        Logger.error("ArgumentError processing metrics: #{inspect(e)}")
+
+      e ->
+        Logger.error("Error processing metrics: #{inspect(e)}")
     end
 
     {:noreply, state}

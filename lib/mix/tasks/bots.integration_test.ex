@@ -116,5 +116,6 @@ defmodule Mix.Tasks.Bots.IntegrationTest do
 
       :fail ->
         exit({:shutdown, 1})
+    end
   end
 end
