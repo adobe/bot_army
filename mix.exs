@@ -25,7 +25,7 @@ defmodule BotArmy.MixProject do
 
   defp deps,
     do: [
-      {:behavior_tree, "~> 0.3.0"},
+      {:behavior_tree, "~> 0.3.1"},
       {:credo, "~> 0.8.10", only: [:dev, :test]},
       {:con_cache, "~> 0.13.1"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
