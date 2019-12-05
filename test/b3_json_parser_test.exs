@@ -3,13 +3,19 @@ defmodule A do
 
   def simple(), do: :ok
 
-  def with_args(num, string, opts \\ []), do: :ok
+  def with_args(_num, _string, _opts \\ []), do: :ok
 end
 
 defmodule A.Nested do
   @moduledoc false
 
   def test(), do: :ok
+end
+
+defmodule B do
+  @moduledoc false
+
+  def test(_a, _b \\ 22, _c \\ 33), do: :ok
 end
 
 defmodule BotArmy.B3JsonParserTest do
@@ -19,6 +25,7 @@ defmodule BotArmy.B3JsonParserTest do
 
   alias BehaviorTree.Node
   alias BotArmy.B3JsonParser
+  import BotArmy.Actions, only: [action: 2, action: 3]
 
   describe "B3JsonParser" do
     test "parse/1" do
@@ -31,13 +38,27 @@ defmodule BotArmy.B3JsonParserTest do
   defp expected_parsed_tree,
     do:
       Node.sequence([
-        :a
-        # Node.select([
-        #   action(Sample, :validate_number, [n]),
-        #   action(Common, :error, ["The number must be between 1 and 10"])
-        # ]),
-        # action(Sample, :init_guesses_count),
-        # Node.repeat_until_succeed(action(BotArmy.Actions, :wait, [0])),
-        # action(BotArmy.Actions, :wait, [60])
+        Node.select([
+          action(A, :simple),
+          action(A.Nested, :test),
+          action(A, :simple),
+          action(A, :with_args, [1, "hi", [name: false]]),
+          action(BotArmy.Actions, :error, ["Oops"])
+        ]),
+        Node.repeat_until_succeed(Node.negate(action(A, :simple))),
+        Node.repeat_until_fail(action(A, :simple)),
+        Node.repeat_n(5, action(A, :with_args, [2, "bye"])),
+        action(BotArmy.Actions, :wait, [1]),
+        action(BotArmy.Actions, :wait, [1]),
+        tree_b(1),
+        tree_b(111, 222, 333)
+      ])
+
+  defp tree_b(a, b \\ 999, _c \\ 999),
+    do:
+      Node.sequence([
+        action(B, :test, [1, 2, 3]),
+        action(B, :test, [a]),
+        action(B, :test, [a, b, 3])
       ])
 end
