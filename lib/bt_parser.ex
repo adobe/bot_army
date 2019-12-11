@@ -17,6 +17,15 @@ defmodule BotArmy.BTParser do
       path
       |> File.read!()
       |> Jason.decode!()
+      |> (fn
+            # json output via save to file has a "wrapping" layer, whereas copy/paste
+            # from Project > Export does not
+            %{"data" => data} ->
+              data
+
+            full ->
+              full
+          end).()
 
     root_tree =
       Enum.find(
@@ -235,59 +244,47 @@ defmodule BotArmy.BTParser do
     end
   end
 
-  defp convert_node(%{"name" => "error"} = node, _tree, _project) do
-    msg = node["properties"]["msg"] || raise "Error nodes must have a \"msg\" property."
-    action(BotArmy.Actions, :error, [msg])
+  defp convert_node(%{"name" => "error"} = node, tree, _project) do
+    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
+    parsed_args = parse_args!(args, tree["properties"])
+
+    action(BotArmy.Actions, :error, parsed_args)
   end
 
-  defp convert_node(
-         %{"name" => "wait", "properties" => %{"seconds" => n}},
-         _tree,
-         _project
-       )
-       when is_integer(n) do
-    unless n >= 0,
+  defp convert_node(%{"name" => "wait"} = node, tree, _project) do
+    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
+    parsed_args = parse_args!(args, tree["properties"])
+
+    unless match?([n | _] when n > 0, parsed_args),
       do:
         raise(
-          "Wait nodes must have a \"seconds\" property greater than or equal to 0, got #{
-            inspect(n)
+          "Wait nodes must have a \"seconds\" property greater than or equal to 0, or two integers like `wait(1, 10)`; got #{
+            inspect(parsed_args)
           }"
         )
 
-    action(BotArmy.Actions, :wait, [n])
+    action(BotArmy.Actions, :wait, parsed_args)
   end
 
-  defp convert_node(
-         %{"name" => "wait", "properties" => %{"seconds" => str}},
-         _tree,
-         _project
-       )
-       when is_binary(str) do
-    case str |> String.split(",") |> Enum.map(&(&1 |> String.trim() |> Integer.parse())) do
-      [{a, _}, {b, _}] when is_integer(a) and is_integer(b) ->
-        action(BotArmy.Actions, :wait, [a, b])
-
-      _ ->
-        raise "Wait nodes must have a \"seconds\" property with a value of either a positive integer or two positive integers separated by a comma, got #{
-                inspect(str)
-              }"
-    end
+  defp convert_node(%{"name" => "log"} = node, tree, _project) do
+    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
+    parsed_args = parse_args!(args, tree["properties"])
+    action(BotArmy.Actions, :log, parsed_args)
   end
 
-  defp convert_node(%{"name" => "wait"} = node, _tree, _project) do
-    raise "Wait nodes must have a \"seconds\" property with a value of either a positive integer or two positive integers separated by a comma, got #{
-            inspect(node, pretty: true)
+  defp convert_node(%{"name" => "succeed_rate"} = node, tree, _project) do
+    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
+    parsed_args = parse_args!(args, tree["properties"])
+
+    unless match?([i] when i > 0 and i < 1, parsed_args),
+      do:
+        raise(
+          "Succeed Rate nodes must have a \"rate\" argument between 0 and 1 like `succeed_rate(0.75); got #{
+            inspect(parsed_args)
           }"
-  end
+        )
 
-  defp convert_node(%{"name" => "log"} = node, _tree, _project) do
-    msg = node["properties"]["msg"] || raise "Log nodes must have a \"msg\" property."
-    action(BotArmy.Actions, :log, [msg])
-  end
-
-  defp convert_node(%{"name" => "succeed_rate"} = node, _tree, _project) do
-    rate = node["properties"]["rate"] || raise "Succeed Rate nodes must have a \"rate\" property."
-    action(BotArmy.Actions, :succeed_rate, [rate])
+    action(BotArmy.Actions, :succeed_rate, parsed_args)
   end
 
   defp convert_node(%{"name" => "done"}, _tree, _project) do
