@@ -59,32 +59,62 @@ defmodule BotArmy.BTParser do
     Map.get(tree["nodes"], id)
   end
 
-  defp parse_args!(args, context) do
-    pre_parsed_args =
-      Regex.replace(~r/{{([^}]+)}}/, args, fn _whole_match, key ->
-        value = Map.get(context, key)
+  defp replace_templates!(str, context) when is_binary(str) and is_map(context) do
+    Regex.replace(~r/{{([^}]+)}}/, str, fn _whole_match, key ->
+      value = Map.get(context, key)
 
-        unless value,
-          do:
-            raise(
-              ~s(Unable to find a property with key `#{key}`in this node's tree's properties. Defined properties: `#{
-                inspect(context)
-              }`)
-            )
+      unless value,
+        do:
+          raise(
+            ~s(Unable to find a property with key `#{key}`in this node's tree's properties. Defined properties: `#{
+              inspect(context)
+            }`)
+          )
 
-        # value might be a number, so make sure it is a string
-        to_string(value)
-      end)
+      # The looked-up value might be an int, which doesn't work with Regex.replace
+      # (becomes a binary), so we must to_string it first
+      to_string(value)
+    end)
+  end
 
-    case pre_parsed_args |> (&("[" <> &1 <> "]")).() |> TermParser.parse() do
+  defp replace_templates!(non_string, _context), do: non_string
+
+  defp ensure_int(int) when is_integer(int), do: {:ok, int}
+
+  defp ensure_int(other) do
+    case Integer.parse(other) do
+      {n, ""} -> {:ok, n}
+      _ -> {:error, other}
+    end
+  end
+
+  defp get_properties(node, context) do
+    node["properties"]
+    |> Enum.map(fn {k, v} ->
+      {k, replace_templates!(v, context)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp extract_args!(str, context) when is_binary(str) do
+    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, str)
+    args |> replace_templates!(context) |> parse_args!()
+  end
+
+  defp parse_args!(args) do
+    case args |> (&("[" <> &1 <> "]")).() |> TermParser.parse() do
       {:ok, parsed_args} ->
         parsed_args
 
       {:error, e} ->
-        raise ~s(Unable to parse args `#{pre_parsed_args}`.  Make sure they are in a valid Elixir terms format, like `"my_string", 99, false, [opt_a: true], %{name: "Tom"}`.
+        raise ~s(Unable to parse args `#{args}`.  Make sure they are in a valid Elixir terms format, like `"my_string", 99, false, [opt_a: true], %{name: "Tom"}`.
           Raw error: #{inspect(e, pretty: true)})
     end
   end
+
+  ###### Conversions
+
+  ### Tree
 
   defp convert_tree(tree, project) do
     tree["root"]
@@ -134,15 +164,17 @@ defmodule BotArmy.BTParser do
     children =
       node["children"]
       |> Enum.map(fn node_id ->
-        case get_node(node_id, tree) do
-          %{"properties" => %{"weight" => weight}} = child
-          when is_integer(weight) and weight > 0 ->
-            {convert_node(child, tree, project), weight}
+        child = get_node(node_id, tree)
 
-          child ->
-            raise "All children nodes of a Random weighted node must have a \"weight\" proprty as an integer greater than 0, got #{
+        with %{"weight" => weight_val} <- get_properties(child, tree["properties"]),
+             {:ok, weight} when weight_val > 0 <- ensure_int(weight_val) do
+          {convert_node(child, tree, project), weight}
+        else
+          e ->
+            raise "All children nodes of a Random weighted node must have a \"weight\" proprty as an integer greater than 0, got: #{
                     inspect(child, pretty: true)
-                  }"
+                  }
+            specific error: #{inspect(e, pretty: true)}"
         end
       end)
 
@@ -202,13 +234,16 @@ defmodule BotArmy.BTParser do
       |> get_node(tree)
       |> convert_node(tree, project)
 
-    n =
-      case Map.get(node["properties"], "n") do
-        n when is_integer(n) and n > 1 -> n
-        _ -> raise "Repeater nodes must have a `n` integer property greater than 1"
-      end
-
-    Node.repeat_n(n, child)
+    with %{"n" => n_val} <- get_properties(node, tree["properties"]),
+         {:ok, n} when n > 1 <- ensure_int(n_val) do
+      Node.repeat_n(n, child)
+    else
+      e ->
+        raise "Repeater nodes must have a `n` integer property greater than 1, got: #{
+                inspect(node["properties"], pretty: true)
+              }
+        , specific error: #{inspect(e, pretty: true)}"
+    end
   end
 
   ### Actions
@@ -219,7 +254,7 @@ defmodule BotArmy.BTParser do
            {:format?, Regex.run(~r/^([^(]+)\((.*)\)(?:\s.+|$)/, node["title"])},
          {:format?, [function_str | mod_reversed]} when mod_reversed != [] and function_str != "" <-
            {:format?, mod_fn |> String.split(".") |> Enum.reverse()},
-         args <- parse_args!(args_str, tree["properties"]),
+         args <- args_str |> replace_templates!(tree["properties"]) |> parse_args!(),
          mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
          function <- String.to_atom(function_str),
          {:exists?, true} <-
@@ -245,62 +280,60 @@ defmodule BotArmy.BTParser do
   end
 
   defp convert_node(%{"name" => "error"} = node, tree, _project) do
-    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
-    parsed_args = parse_args!(args, tree["properties"])
+    args = extract_args!(node["title"], tree["properties"])
 
-    action(BotArmy.Actions, :error, parsed_args)
+    action(BotArmy.Actions, :error, args)
   end
 
   defp convert_node(%{"name" => "wait"} = node, tree, _project) do
-    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
-    parsed_args = parse_args!(args, tree["properties"])
+    args = extract_args!(node["title"], tree["properties"])
 
-    unless match?([n | _] when n > 0, parsed_args),
+    unless match?([n | _] when n > 0, args),
       do:
         raise(
           "Wait nodes must have a \"seconds\" property greater than or equal to 0, or two integers like `wait(1, 10)`; got #{
-            inspect(parsed_args)
+            inspect(args)
           }"
         )
 
-    action(BotArmy.Actions, :wait, parsed_args)
+    action(BotArmy.Actions, :wait, args)
   end
 
   defp convert_node(%{"name" => "log"} = node, tree, _project) do
-    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
-    parsed_args = parse_args!(args, tree["properties"])
-    action(BotArmy.Actions, :log, parsed_args)
+    args = extract_args!(node["title"], tree["properties"])
+    action(BotArmy.Actions, :log, args)
   end
 
   defp convert_node(%{"name" => "succeed_rate"} = node, tree, _project) do
-    [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, node["title"])
-    parsed_args = parse_args!(args, tree["properties"])
+    args = extract_args!(node["title"], tree["properties"])
 
-    unless match?([i] when i > 0 and i < 1, parsed_args),
+    unless match?([i] when i > 0 and i < 1, args),
       do:
         raise(
           "Succeed Rate nodes must have a \"rate\" argument between 0 and 1 like `succeed_rate(0.75); got #{
-            inspect(parsed_args)
+            inspect(args)
           }"
         )
 
-    action(BotArmy.Actions, :succeed_rate, parsed_args)
+    action(BotArmy.Actions, :succeed_rate, args)
   end
 
   defp convert_node(%{"name" => "done"}, _tree, _project) do
     action(BotArmy.Actions, :done, [])
   end
 
-  defp convert_node(node, _tree, project) do
+  defp convert_node(node, tree, project) do
     # might be a tree, check if the name is one of the tree ids
     tree_id = node["name"]
 
-    tree =
+    target_tree =
       get_tree(tree_id, project) ||
         raise "Unknown node type: \"#{inspect(node, pretty: true)}\""
 
-    tree
-    |> Map.update!("properties", &Map.merge(&1, node["properties"]))
+    node_props = get_properties(node, tree["properties"])
+
+    target_tree
+    |> Map.update!("properties", &Map.merge(&1, node_props))
     |> convert_tree(project)
   end
 end

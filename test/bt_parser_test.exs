@@ -72,12 +72,12 @@ defmodule BotArmy.BTParserTest do
         Node.sequence([
           action(B, :test, [1, 2, 3]),
           action(B, :test, [1]),
-          action(B, :test, [1, 999, 3])
+          action(B, :test, [1, 999, 999])
         ]),
         Node.sequence([
           action(B, :test, [1, 2, 3]),
           action(B, :test, [111]),
-          action(B, :test, [111, 222, 3])
+          action(B, :test, [111, 222, 333])
         ]),
         action(BotArmy.Actions, :done, [])
       ])
