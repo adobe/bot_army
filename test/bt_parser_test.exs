@@ -46,6 +46,7 @@ defmodule BotArmy.BTParserTest do
           action(A.Nested, :test),
           action(A, :simple, []),
           action(A, :with_args, [1, "hi", [name: false]]),
+          action(A, :with_args, [2, "bye"]),
           action(BotArmy.Actions, :error, ["Oops"])
         ]),
         Node.repeat_until_succeed(Node.negate(action(A, :simple))),

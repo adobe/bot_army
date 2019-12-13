@@ -141,6 +141,40 @@ defmodule BotArmy.BTParser do
     end
   end
 
+  defp parse_action_syntax(str, context) when is_binary(str) do
+    with {:format?, [_all, mod_fn, args_str]} <-
+           {:format?, Regex.run(~r/^([^(]+)\((.*)\)(?:\s.+|$)/, str)},
+         {:format?, [function_str | mod_reversed]} when mod_reversed != [] and function_str != "" <-
+           {:format?, mod_fn |> String.split(".") |> Enum.reverse()},
+         args <- args_str |> parse_args!(context),
+         mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
+         function <- String.to_atom(function_str),
+         # If the action module is never used (which is likely the case when
+         # parsing from json) it won't get loaded
+         Code.ensure_loaded(mod),
+         {:exists?, true} <-
+           {:exists?,
+            function_exported?(
+              mod,
+              function,
+              # add 1 for the implicit "context" argument that gets tacked on
+              Enum.count(args) + 1
+            )} do
+      {:ok, {mod, function, args}}
+    else
+      {:format?, _} ->
+        raise "Runner/custom action nodes must have a title like \"Module.Submodule.function_name(1,2,3)\" all in valid Elixir terms.  Unable to parse \"#{
+                str
+              }\"."
+
+      {:exists?, false} ->
+        raise "The provided action does not exist: \"#{str}\""
+
+      e ->
+        {:error, e}
+    end
+  end
+
   ###### Conversions
 
   ### Tree
@@ -277,38 +311,13 @@ defmodule BotArmy.BTParser do
 
   ### Actions
 
-  defp convert_node(%{"name" => name} = node, tree, _project)
-       when name in ["runner", "action", "Action"] do
-    with {:format?, [_all, mod_fn, args_str]} <-
-           {:format?, Regex.run(~r/^([^(]+)\((.*)\)(?:\s.+|$)/, node["title"])},
-         {:format?, [function_str | mod_reversed]} when mod_reversed != [] and function_str != "" <-
-           {:format?, mod_fn |> String.split(".") |> Enum.reverse()},
-         args <- args_str |> parse_args!(tree["properties"]),
-         mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
-         function <- String.to_atom(function_str),
-         # If the action module is never used (which is likely the case when
-         # parsing from json) it won't get loaded
-         Code.ensure_loaded(mod),
-         {:exists?, true} <-
-           {:exists?,
-            function_exported?(
-              mod,
-              function,
-              # add 1 for the implicit "context" argument that gets tacked on
-              Enum.count(args) + 1
-            )} do
-      action(mod, function, args)
-    else
-      {:format?, _} ->
-        raise "Runner/custom action nodes must have a title like \"Module.Submodule.function_name(1,2,3)\" all in valid Elixir terms.  Unable to parse \"#{
-                node["title"]
-              }\"."
+  defp convert_node(%{"name" => "runner"} = node, tree, _project) do
+    case parse_action_syntax(node["title"], tree["properties"]) do
+      {:ok, {mod, function, args}} ->
+        action(mod, function, args)
 
-      {:exists?, false} ->
-        raise "The provided action does not exist: \"#{node["title"]}\""
-
-      _ ->
-        raise "Unknown error parsing \"#{node["title"]}\""
+      {:error, e} ->
+        raise "Unknown error parsing \"#{node["title"]}\", error: #{inspect(e, pretty: true)}"
     end
   end
 
@@ -356,17 +365,25 @@ defmodule BotArmy.BTParser do
   end
 
   defp convert_node(node, tree, project) do
-    # might be a tree, check if the name is one of the tree ids
-    tree_id = node["name"]
+    # might be a tree, check if the name is one of the tree ids, or might be a custom
+    # action node, check if the format is correct
+    #
+    case get_tree(node["name"], project) do
+      target_tree when not is_nil(target_tree) ->
+        node_props = get_properties(node, tree["properties"])
 
-    target_tree =
-      get_tree(tree_id, project) ||
-        raise "Unknown node type: \"#{inspect(node, pretty: true)}\""
+        target_tree
+        |> Map.update!("properties", &Map.merge(&1, node_props))
+        |> convert_tree(project)
 
-    node_props = get_properties(node, tree["properties"])
+      nil ->
+        case parse_action_syntax(node["title"], tree["properties"]) do
+          {:ok, {mod, function, args}} ->
+            action(mod, function, args)
 
-    target_tree
-    |> Map.update!("properties", &Map.merge(&1, node_props))
-    |> convert_tree(project)
+          {:error, _} ->
+            raise "Unknown node type: \"#{inspect(node, pretty: true)}\""
+        end
+    end
   end
 end
