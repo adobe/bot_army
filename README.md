@@ -57,6 +57,16 @@ def try_something_else(context), do: ...
 See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more details.
 
 
+## What if I want to make trees with a GUI editor?
+
+No problem, check out the [Behavior Tree
+Editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) to make
+json files that you can parse with `BotArmy.BTParser.parse!/2`.
+
+![Behavior Tree Editor
+example](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor/blob/master/preview.png?raw=true)
+
+
 ## Release the bots!
 
 Run the bots with `mix bots.load_test`:

@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>mix bots.load_test — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -73,23 +73,27 @@ mix bots.load_test              </h1>
 
 
         <section id="moduledoc">
-<p>Task to run the bots.  Can call with various flags.  Opens an interactive window to 
+<p>Task to run the bots.  Can call with various flags.  Opens an interactive window to
 control the bots, and prints a nice summary at the end.</p>
 <p>Supported arguments:</p>
 <ul>
 <li><code class="inline">n</code> number of bots, defaults to 10
 </li>
-<li><code class="inline">tree</code> - [required] The full name of the module defining the integration test 
-tree (must be in scope).  Must expose the function <code class="inline">tree/0</code>.  Ex: 
+<li><code class="inline">tree</code> - [required] The full name of the module defining the integration test
+tree (must be in scope).  Must expose the function <code class="inline">tree/0</code>.  Ex:
 &quot;MyService.Workflow.Simple&quot;
 </li>
-<li><code class="inline">bot</code> - [optional] A custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
+<li><code class="inline">bot</code> - [optional] A custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise
 uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
 </li>
-<li><code class="inline">custom</code> - [optional] Configs for your custom domain.  You must specify these in 
-quotes as an Elixir map or keyword list (ex: --custom &#39;[host: &quot;dev&quot;]&#39;).  Each 
-key/value pair will be placed into <code class="inline">BotArmy.SharedDAta</code> for access in your actions, 
+<li><code class="inline">custom</code> - [optional] Configs for your custom domain.  You must specify these in
+quotes as an Elixir map or keyword list (ex: --custom &#39;[host: &quot;dev&quot;]&#39;).  Each
+key/value pair will be placed into <a href="BotArmy.SharedData.html"><code class="inline">BotArmy.SharedData</code></a> for access in your actions,
 and other custom code.
+</li>
+<li><code class="inline">disable-log-file</code> - [optional] Disables file-based logging.
+</li>
+<li><code class="inline">format-json-logs</code> - [optional] BotArmy will output JSON-formatted log entries.
 </li>
 </ul>
         </section>

@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="bot_army v0.1.0">
-    <title>404 — bot_army v0.1.0</title>
+    <title>BotArmy.LogFormatters.JSONLogFormatter — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
     <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
   </head>
-  <body data-type="extras">
+  <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
-<div class="main">
+    <div class="main">
 
 <button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" title="Collapse/expand sidebar"></span>
@@ -67,14 +67,69 @@ bot_army      </a>
     <div id="content" class="content-inner">
 
 
-<h2>Page not found</h2>
+      <h1>
+        <small class="app-vsn">bot_army v0.1.0</small>
+BotArmy.LogFormatters.JSONLogFormatter              </h1>
 
-<p>Sorry, but the page you were trying to get to, does not exist. You
-may want to try searching this site using the sidebar
-  or using our <a href="api-reference.html">API Reference</a> page
-to find what you were looking for.</p>
 
-      <footer class="footer">
+        <section id="moduledoc">
+<p>Use this logger formatter for nice JSON formatted logs with information useful for
+syncing timing.</p>
+<p>Based on https://github.com/soundtrackyourbrand/exlogger, but uses unix epoch
+timestamps and shows errors.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#format/4">format(level, message, timestamp, metadata)</a>
+  </div>
+</div>
+  </div>
+        </section>
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="format/4">
+    <div class="detail-header">
+    <a href="#format/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">format(level, message, timestamp, metadata)</span>
+        
+      <div class="specs">
+          <pre>format(
+  <a href="https://hexdocs.pm/logger/Logger.html#t:level/0">Logger.level</a>(),
+  <a href="https://hexdocs.pm/logger/Logger.html#t:message/0">Logger.message</a>(),
+  <a href="https://hexdocs.pm/logger/Logger.Formatter.html#t:time/0">Logger.Formatter.time</a>(),
+  <a href="https://hexdocs.pm/logger/Logger.Formatter.html#t:keyword/0">Logger.Formatter.keyword</a>()
+) :: <a href="https://hexdocs.pm/elixir/IO.html#t:chardata/0">IO.chardata</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
         <p>
           <span class="line">
             Built using
@@ -101,3 +156,4 @@ to find what you were looking for.</p>
   
   </body>
 </html>
+

@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.IntegrationTest.Workflow — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -86,27 +86,27 @@ conditions in mind if your tests make use of the same resource.  If any tree fai
 always run, even if prior trees fail</p>
 <p>You can define each stage directly by implementing the callbacks, or you can use 
 the supplied macros.</p>
-<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyWorkflow</span><span class="w"> </span><span class="k" data-group-id="2011971855-1">do</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyWorkflow</span><span class="w"> </span><span class="k" data-group-id="4120426787-1">do</span><span class="w">
   </span><span class="kn">use</span><span class="w"> </span><span class="nc">Workflow</span><span class="w">
 
-  </span><span class="n">pre</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="2011971855-2">(</span><span class="n">action</span><span class="p" data-group-id="2011971855-3">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-4">[</span><span class="s">&quot;pre&quot;</span><span class="p" data-group-id="2011971855-4">]</span><span class="p" data-group-id="2011971855-3">)</span><span class="p" data-group-id="2011971855-2">)</span><span class="w">
+  </span><span class="n">pre</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4120426787-2">(</span><span class="n">action</span><span class="p" data-group-id="4120426787-3">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-4">[</span><span class="s">&quot;pre&quot;</span><span class="p" data-group-id="4120426787-4">]</span><span class="p" data-group-id="4120426787-3">)</span><span class="p" data-group-id="4120426787-2">)</span><span class="w">
 
-  </span><span class="n">post</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="2011971855-5">(</span><span class="n">action</span><span class="p" data-group-id="2011971855-6">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-7">[</span><span class="s">&quot;post&quot;</span><span class="p" data-group-id="2011971855-7">]</span><span class="p" data-group-id="2011971855-6">)</span><span class="p" data-group-id="2011971855-5">)</span><span class="w">
+  </span><span class="n">post</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4120426787-5">(</span><span class="n">action</span><span class="p" data-group-id="4120426787-6">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-7">[</span><span class="s">&quot;post&quot;</span><span class="p" data-group-id="4120426787-7">]</span><span class="p" data-group-id="4120426787-6">)</span><span class="p" data-group-id="4120426787-5">)</span><span class="w">
 
-  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="2011971855-8">(</span><span class="n">action</span><span class="p" data-group-id="2011971855-9">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-10">[</span><span class="s">&quot;first parallel&quot;</span><span class="p" data-group-id="2011971855-10">]</span><span class="p" data-group-id="2011971855-9">)</span><span class="p" data-group-id="2011971855-8">)</span><span class="w">
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4120426787-8">(</span><span class="n">action</span><span class="p" data-group-id="4120426787-9">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-10">[</span><span class="s">&quot;first parallel&quot;</span><span class="p" data-group-id="4120426787-10">]</span><span class="p" data-group-id="4120426787-9">)</span><span class="p" data-group-id="4120426787-8">)</span><span class="w">
 
-  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="2011971855-11">(</span><span class="n">action</span><span class="p" data-group-id="2011971855-12">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-13">[</span><span class="mi">0</span><span class="p" data-group-id="2011971855-13">]</span><span class="p" data-group-id="2011971855-12">)</span><span class="p" data-group-id="2011971855-11">)</span><span class="w">
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Node</span><span class="o">.</span><span class="n">always_succeed</span><span class="p" data-group-id="4120426787-11">(</span><span class="n">action</span><span class="p" data-group-id="4120426787-12">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-13">[</span><span class="mi">0</span><span class="p" data-group-id="4120426787-13">]</span><span class="p" data-group-id="4120426787-12">)</span><span class="p" data-group-id="4120426787-11">)</span><span class="w">
 
   </span><span class="c1"># do syntax variant</span><span class="w">
-  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 3&quot;</span><span class="w"> </span><span class="k" data-group-id="2011971855-14">do</span><span class="w">
+  </span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test 3&quot;</span><span class="w"> </span><span class="k" data-group-id="4120426787-14">do</span><span class="w">
     </span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;runtime&quot;</span><span class="w">
 
-    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="2011971855-15">(</span><span class="p" data-group-id="2011971855-16">[</span><span class="w">
-      </span><span class="n">action</span><span class="p" data-group-id="2011971855-17">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-18">[</span><span class="n">var</span><span class="p" data-group-id="2011971855-18">]</span><span class="p" data-group-id="2011971855-17">)</span><span class="p">,</span><span class="w">
-      </span><span class="n">action</span><span class="p" data-group-id="2011971855-19">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2011971855-20">[</span><span class="mi">0</span><span class="p" data-group-id="2011971855-20">]</span><span class="p" data-group-id="2011971855-19">)</span><span class="w">
-    </span><span class="p" data-group-id="2011971855-16">]</span><span class="p" data-group-id="2011971855-15">)</span><span class="w">
-  </span><span class="k" data-group-id="2011971855-14">end</span><span class="w">
-</span><span class="k" data-group-id="2011971855-1">end</span></code></pre>
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="4120426787-15">(</span><span class="p" data-group-id="4120426787-16">[</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4120426787-17">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-18">[</span><span class="n">var</span><span class="p" data-group-id="4120426787-18">]</span><span class="p" data-group-id="4120426787-17">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4120426787-19">(</span><span class="nc">Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:wait</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4120426787-20">[</span><span class="mi">0</span><span class="p" data-group-id="4120426787-20">]</span><span class="p" data-group-id="4120426787-19">)</span><span class="w">
+    </span><span class="p" data-group-id="4120426787-16">]</span><span class="p" data-group-id="4120426787-15">)</span><span class="w">
+  </span><span class="k" data-group-id="4120426787-14">end</span><span class="w">
+</span><span class="k" data-group-id="4120426787-1">end</span></code></pre>
         </section>
 
         <section id="summary" class="details-list">
@@ -197,10 +197,10 @@ Functions          </h1>
 names, and this will define <code class="inline">pre</code> as a <code class="inline">Node.sequence</code> of each merged workflows&#39; 
 <code class="inline">pre</code>s, and the same for <code class="inline">post</code>.  It will also merge all <code class="inline">parallel</code> tests into one 
 <code class="inline">parallel</code> definition.</p>
-<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MasterWorkflow</span><span class="w"> </span><span class="k" data-group-id="2847105435-1">do</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MasterWorkflow</span><span class="w"> </span><span class="k" data-group-id="7249388131-1">do</span><span class="w">
   </span><span class="kn">use</span><span class="w"> </span><span class="nc">BotArmy.IntegrationTest.Workflow</span><span class="w">
-  </span><span class="nc">BotArmy.IntegrationTest.Workflow</span><span class="o">.</span><span class="n">merge</span><span class="p" data-group-id="2847105435-2">(</span><span class="p" data-group-id="2847105435-3">[</span><span class="nc">Workflow1</span><span class="p">,</span><span class="w"> </span><span class="nc">Workflow2</span><span class="p" data-group-id="2847105435-3">]</span><span class="p" data-group-id="2847105435-2">)</span><span class="w">
-</span><span class="k" data-group-id="2847105435-1">end</span></code></pre>
+  </span><span class="nc">BotArmy.IntegrationTest.Workflow</span><span class="o">.</span><span class="n">merge</span><span class="p" data-group-id="7249388131-2">(</span><span class="p" data-group-id="7249388131-3">[</span><span class="nc">Workflow1</span><span class="p">,</span><span class="w"> </span><span class="nc">Workflow2</span><span class="p" data-group-id="7249388131-3">]</span><span class="p" data-group-id="7249388131-2">)</span><span class="w">
+</span><span class="k" data-group-id="7249388131-1">end</span></code></pre>
   </section>
 </section>
 <section class="detail" id="parallel/2">
@@ -220,10 +220,10 @@ as you want in your workflow module.</p>
 set up the tree.</p>
 <pre><code class="nohighlight makeup elixir"><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test xyz&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">xyz_test_node</span><span class="w">
 
-</span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test abc&quot;</span><span class="w"> </span><span class="k" data-group-id="0148992866-1">do</span><span class="w">
-  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">:rand</span><span class="o">.</span><span class="n">uniform</span><span class="p" data-group-id="0148992866-2">(</span><span class="p" data-group-id="0148992866-2">)</span><span class="w">
-  </span><span class="n">abc_test_node</span><span class="p" data-group-id="0148992866-3">(</span><span class="n">n</span><span class="p" data-group-id="0148992866-3">)</span><span class="w">
-</span><span class="k" data-group-id="0148992866-1">end</span></code></pre>
+</span><span class="n">parallel</span><span class="w"> </span><span class="s">&quot;test abc&quot;</span><span class="w"> </span><span class="k" data-group-id="0754446593-1">do</span><span class="w">
+  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">:rand</span><span class="o">.</span><span class="n">uniform</span><span class="p" data-group-id="0754446593-2">(</span><span class="p" data-group-id="0754446593-2">)</span><span class="w">
+  </span><span class="n">abc_test_node</span><span class="p" data-group-id="0754446593-3">(</span><span class="n">n</span><span class="p" data-group-id="0754446593-3">)</span><span class="w">
+</span><span class="k" data-group-id="0754446593-1">end</span></code></pre>
 <p>You must have at least one of these, and all test names must be unique.</p>
   </section>
 </section>
@@ -278,7 +278,7 @@ Callbacks          </h1>
     <h1 class="signature">parallel()</span>
         
       <div class="specs">
-          <pre>parallel() :: %{required(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) => <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()}</pre>
+          <pre>parallel() :: %{required(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) => <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()}</pre>
       </div>
   </div>
   <section class="docstring">
@@ -294,7 +294,7 @@ Callbacks          </h1>
     <h1 class="signature">post()</span>
         
       <div class="specs">
-          <pre>post() :: <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+          <pre>post() :: <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
       </div>
   </div>
   <section class="docstring">
@@ -312,7 +312,7 @@ any tree fails.</p>
     <h1 class="signature">pre()</span>
         
       <div class="specs">
-          <pre>pre() :: <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+          <pre>pre() :: <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
       </div>
   </div>
   <section class="docstring">

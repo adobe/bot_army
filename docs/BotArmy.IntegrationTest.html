@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.IntegrationTest — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -74,9 +74,9 @@ BotArmy.IntegrationTest              </h1>
 
         <section id="moduledoc">
 <p>Manages an integration test run.</p>
-<p>Don&#39;t use this directly, call from <a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>.  See the 
+<p>Don&#39;t use this directly, call from <a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>.  See the
 documentation for the available params.</p>
-<p>This will run the &quot;pre&quot; tree first, then the &quot;parallel&quot; trees concurrently, then 
+<p>This will run the &quot;pre&quot; tree first, then the &quot;parallel&quot; trees concurrently, then
 the &quot;post&quot; tree.  The post tree will always run, even if prior trees fail.</p>
         </section>
 
@@ -301,14 +301,14 @@ entering the loop or calling <code class="inline">c:terminate/2</code>.</p>
 <p>This supports parallel trees, and a pre and post step.</p>
 <p>Opts map:</p>
 <ul>
-<li><code class="inline">workflow</code> - [required] the module defining the work to be done.  Must implement 
+<li><code class="inline">workflow</code> - [required] the module defining the work to be done.  Must implement
 <a href="BotArmy.IntegrationTest.Workflow.html"><code class="inline">BotArmy.IntegrationTest.Workflow</code></a>.
 </li>
-<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
+<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise
 uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
 </li>
-<li><code class="inline">callback</code> - [required] a function that will be called with the result of the 
-test, which will either be <code class="inline">:passed</code> or <code class="inline">{:failed, &lt;failed tests&gt;}</code> where &quot;failed 
+<li><code class="inline">callback</code> - [required] a function that will be called with the result of the
+test, which will either be <code class="inline">:passed</code> or <code class="inline">{:failed, &lt;failed tests&gt;}</code> where &quot;failed
 tests&quot; is a list of tuples with test keys and failure reasons.
 </li>
 </ul>

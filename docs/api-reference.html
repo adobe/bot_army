@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>API Reference — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -87,17 +87,31 @@ bot_army      </a>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="BotArmy.BTParser.html">BotArmy.BTParser</a>
+  </div>
+    <div class="summary-synopsis"><p>Parses JSON files created from the Behavior Tree visual editor
+(https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) into a
+<a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>, ready to be supplied to a bot.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="BotArmy.Bot.html">BotArmy.Bot</a>
   </div>
-    <div class="summary-synopsis"><p>A &quot;live&quot; bot that can perform actions described by a behavior tree 
-(<a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>).</p></div>
+    <div class="summary-synopsis"><p>A &quot;live&quot; bot that can perform actions described by a behavior tree
+(<a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>).</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="BotArmy.Bot.Default.html">BotArmy.Bot.Default</a>
   </div>
-    <div class="summary-synopsis"><p>The standard bot, implementing the BotArmy.Bot behaviour, without any additional 
+    <div class="summary-synopsis"><p>The standard bot, implementing the BotArmy.Bot behaviour, without any additional
 functionality or configuration.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="BotArmy.EtsMetrics.html">BotArmy.EtsMetrics</a>
+  </div>
+    <div class="summary-synopsis"><p>Stores information during the but run for metrics gathering.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -130,9 +144,10 @@ functionality or configuration.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="BotArmy.Metrics.html">BotArmy.Metrics</a>
+    <a href="BotArmy.LogFormatters.JSONLogFormatter.html">BotArmy.LogFormatters.JSONLogFormatter</a>
   </div>
-    <div class="summary-synopsis"><p>Stores information during the but run for metrics gathering.</p></div>
+    <div class="summary-synopsis"><p>Use this logger formatter for nice JSON formatted logs with information useful for
+syncing timing.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -215,22 +230,22 @@ like runtime config data.</p></div>
   <div class="summary-signature">
     <a href="Mix.Tasks.Bots.IntegrationTest.html">mix bots.integration_test</a>
   </div>
-    <div class="summary-synopsis"><p>Runs integration tests in an iex context, logging the result and returning an 
-appropriate exit code.  </p></div>
+    <div class="summary-synopsis"><p>Runs integration tests in an iex context, logging the result and returning an
+appropriate exit code.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="Mix.Tasks.Bots.LoadTest.html">mix bots.load_test</a>
   </div>
-    <div class="summary-synopsis"><p>Task to run the bots.  Can call with various flags.  Opens an interactive window to 
+    <div class="summary-synopsis"><p>Task to run the bots.  Can call with various flags.  Opens an interactive window to
 control the bots, and prints a nice summary at the end.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="Mix.Tasks.LoadTestRelease.html">mix load_test_release</a>
   </div>
-    <div class="summary-synopsis"><p>Intended to be used with Distillery releases, not invoked directly, see 
-<code class="inline">Mix.Tasks.LoadTest</code> to run locally and for docs.  There is also an http route 
+    <div class="summary-synopsis"><p>Intended to be used with Distillery releases, not invoked directly, see
+<code class="inline">Mix.Tasks.LoadTest</code> to run locally and for docs.  There is also an http route
 option.</p></div>
 </div>
     </div>

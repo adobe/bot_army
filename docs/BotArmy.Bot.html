@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.Bot — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -73,48 +73,48 @@ BotArmy.Bot <small>behaviour</small>              </h1>
 
 
         <section id="moduledoc">
-<p>A &quot;live&quot; bot that can perform actions described by a behavior tree 
-(<a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>).</p>
-<p>Bots are just GenServers that continuously tick through the provided behavior tree 
-until they die or get an outcome of <code class="inline">:done</code>.  </p>
-<p>Each bot has a &quot;bag of state&quot; called the &quot;context&quot; (sometimes called a &quot;blackboard&quot; 
+<p>A &quot;live&quot; bot that can perform actions described by a behavior tree
+(<a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>).</p>
+<p>Bots are just GenServers that continuously tick through the provided behavior tree
+until they die or get an outcome of <code class="inline">:done</code>.</p>
+<p>Each bot has a &quot;bag of state&quot; called the &quot;context&quot; (sometimes called a &quot;blackboard&quot;
 in behaviour tree terminology), which is used to pass values between actions.</p>
-<p>Bots ingest actions (the leaf nodes of the tree) in the form of MFA tuples.  The 
-function will be called with the current context and any provided arguments. The 
-function must return an outcome, and may also return key-value pairs to 
-store/update in the context. </p>
+<p>Bots ingest actions (the leaf nodes of the tree) in the form of MFA tuples.  The
+function will be called with the current context and any provided arguments. The
+function must return an outcome, and may also return key-value pairs to
+store/update in the context.</p>
 <p>See the <a href="readme.html#behavior-what">README</a> for an example.</p>
 <p>Accepted outcomes are: <code class="inline">:succeed</code>, <code class="inline">:fail</code>, <code class="inline">:continue</code>, <code class="inline">:done</code> or <code class="inline">{:error, reason}</code>.
 <code class="inline">:succeed</code>, <code class="inline">:fail</code> and <code class="inline">:continue</code> can also be in the form of <code class="inline">{:succeed, key: &quot;value&quot;}</code> if you want save/update the context.</p>
-<p><code class="inline">:succeed</code> and <code class="inline">:fail</code> will advance the tree via <a href="https://hexdocs.pm/behavior_tree/0.3.0/BehaviorTree.html"><code class="inline">BehaviorTree</code></a>, while <code class="inline">:continue</code> 
-will leave the tree as it is for the next tick (this can be useful for example for 
-attempting an action multiple times with a sleep and a &quot;max tries&quot; counter in the 
-context). <code class="inline">:done</code> stops the bot process successfully, and <code class="inline">{:error, reason}</code> kills 
+<p><code class="inline">:succeed</code> and <code class="inline">:fail</code> will advance the tree via <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.html"><code class="inline">BehaviorTree</code></a>, while <code class="inline">:continue</code>
+will leave the tree as it is for the next tick (this can be useful for example for
+attempting an action multiple times with a sleep and a &quot;max tries&quot; counter in the
+context). <code class="inline">:done</code> stops the bot process successfully, and <code class="inline">{:error, reason}</code> kills
 the bot process with the provided reason.</p>
-<p>Note the following keys are reserved, and should not be overwritten: <code class="inline">id</code>, <code class="inline">bt</code>, 
+<p>Note the following keys are reserved, and should not be overwritten: <code class="inline">id</code>, <code class="inline">bt</code>,
 <code class="inline">start_time</code></p>
 <h2 id="module-extending-the-bot" class="section-heading">
   <a href="#module-extending-the-bot" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Extending the Bot
 </h2>
 
-<p>You can use Bot exactly as it is.  However, if you need to add additional 
+<p>You can use Bot exactly as it is.  However, if you need to add additional
 functionality to your bots, you can do so.</p>
-<p><a href="#content"><code class="inline">BotArmy.Bot</code></a> is actually a behaviour that you can use (<code class="inline">use BotArmy.Bot</code>) in a 
-custom callback module.  It has a couple of callbacks for config, logging, and 
-lifecycle hooks (TODO).  Since Bot itself uses a GenServer, you can also add 
-GenServer callbacks, such as <code class="inline">init</code>, or <code class="inline">handle_[call|cast|info]</code> 
+<p><a href="#content"><code class="inline">BotArmy.Bot</code></a> is actually a behaviour that you can use (<code class="inline">use BotArmy.Bot</code>) in a
+custom callback module.  It has a couple of callbacks for config, logging, and
+lifecycle hooks (TODO).  Since Bot itself uses a GenServer, you can also add
+GenServer callbacks, such as <code class="inline">init</code>, or <code class="inline">handle_[call|cast|info]</code>
 (<code class="inline">format_status/2</code> is particularly useful).</p>
-<p>For example, you may have a syncing system over websockets that updates the state 
-in the bot&#39;s context.  By extending Bot with some additional handlers, you can add 
+<p>For example, you may have a syncing system over websockets that updates the state
+in the bot&#39;s context.  By extending Bot with some additional handlers, you can add
 this functionality.</p>
-<p>The aforementioned &quot;context&quot; is just the GenServer&#39;s state, so your Actions will 
-have access to everything there.  You can set up initial state in <code class="inline">init/1</code>, and 
-modify it in your handlers as necessary.  If you implement <code class="inline">init/1</code>, the argument 
-will be the starting state, so you can merge your state into that, but must return 
-it.  Again, please be mindful not to overwrite the following keys in the state: 
+<p>The aforementioned &quot;context&quot; is just the GenServer&#39;s state, so your Actions will
+have access to everything there.  You can set up initial state in <code class="inline">init/1</code>, and
+modify it in your handlers as necessary.  If you implement <code class="inline">init/1</code>, the argument
+will be the starting state, so you can merge your state into that, but must return
+it.  Again, please be mindful not to overwrite the following keys in the state:
 <code class="inline">id</code>, <code class="inline">bt</code>, <code class="inline">start_time</code>.</p>
-<p>IMPORTANT - if you do extend Bot, you must set the <code class="inline">bot</code> param when starting a run 
+<p>IMPORTANT - if you do extend Bot, you must set the <code class="inline">bot</code> param when starting a run
 (see the docs in the mix tasks).</p>
         </section>
 
@@ -175,7 +175,7 @@ Functions          </h1>
           </div>
   <section class="docstring">
 <p>Instruct the bot to run the supplied behavior tree.</p>
-<p>Note, the bot will repeatedly loop through the tree unless you include an action 
+<p>Note, the bot will repeatedly loop through the tree unless you include an action
 that returns <code class="inline">:done</code>, at which point it will die.</p>
 <p>Returns an error tuple if called on a bot that is already running.</p>
   </section>
@@ -192,10 +192,10 @@ that returns <code class="inline">:done</code>, at which point it will die.</p>
           </div>
   <section class="docstring">
 <p>Start up a new bot using the supplied bot implementation.</p>
-<p>Takes a keyword list of options that will be passed to the GenServer.  The 
+<p>Takes a keyword list of options that will be passed to the GenServer.  The
 following keys are also used:</p>
 <ul>
-<li><code class="inline">:id</code> - [required] an identifier for this specific bot, used for logging 
+<li><code class="inline">:id</code> - [required] an identifier for this specific bot, used for logging
 purposes.
 </li>
 </ul>

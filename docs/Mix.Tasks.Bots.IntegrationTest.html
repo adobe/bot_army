@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>mix bots.integration_test — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-4365100c0e.js"></script>
+    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -73,24 +73,28 @@ mix bots.integration_test              </h1>
 
 
         <section id="moduledoc">
-<p>Runs integration tests in an iex context, logging the result and returning an 
-appropriate exit code.  </p>
-<p>Parameters: </p>
+<p>Runs integration tests in an iex context, logging the result and returning an
+appropriate exit code.</p>
+<p>Parameters:</p>
 <ul>
-<li><code class="inline">v</code> - [optional] &quot;Verbose&quot;, this will log more and print out all bot actions to 
+<li><code class="inline">v</code> - [optional] &quot;Verbose&quot;, this will log more and print out all bot actions to
 the console (in addition to the log file).  Recommended on CI to help debug.
 </li>
-<li><code class="inline">workflow</code> - [required] The full name of the module defining the integration 
-workflow (must be in scope).  Must implement <a href="BotArmy.IntegrationTest.Workflow.html"><code class="inline">BotArmy.IntegrationTest.Workflow</code></a>.  Ex: 
+<li><code class="inline">workflow</code> - [required] The full name of the module defining the integration
+workflow (must be in scope).  Must implement <a href="BotArmy.IntegrationTest.Workflow.html"><code class="inline">BotArmy.IntegrationTest.Workflow</code></a>.  Ex:
 &quot;MyService.Workflow.Simple&quot;
 </li>
-<li><code class="inline">bot</code> - [optional] A custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise 
+<li><code class="inline">bot</code> - [optional] A custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise
 uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
 </li>
-<li><code class="inline">custom</code> - [optional] Configs for your custom domain.  You must specify these in 
-quotes as an Elixir map or keyword list (ex: <code class="inline">--custom &#39;[host: &quot;dev&quot;]&#39;</code>).  Each 
-key/value pair will be placed into <code class="inline">BotArmy.SharedDAta</code> for access in your actions, 
+<li><code class="inline">custom</code> - [optional] Configs for your custom domain.  You must specify these in
+quotes as an Elixir map or keyword list (ex: <code class="inline">--custom &#39;[host: &quot;dev&quot;]&#39;</code>).  Each
+key/value pair will be placed into <a href="BotArmy.SharedData.html"><code class="inline">BotArmy.SharedData</code></a> for access in your actions,
 and other custom code.
+</li>
+<li><code class="inline">disable-log-file</code> - [optional] Disables file-based logging.
+</li>
+<li><code class="inline">format-json-logs</code> - [optional] BotArmy will output JSON-formatted log entries.
 </li>
 </ul>
         </section>
