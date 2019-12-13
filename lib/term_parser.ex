@@ -28,6 +28,8 @@ defmodule TermParser do
 
   defp _parse({a, b}), do: {_parse(a), _parse(b)}
 
+  defp _parse({:-, _place, [i]}) when is_integer(i), do: -i
+
   defp _parse({:{}, _place, terms}) do
     terms
     |> Enum.map(&_parse/1)
@@ -38,7 +40,7 @@ defmodule TermParser do
     for {k, v} <- terms, into: %{}, do: {_parse(k), _parse(v)}
   end
 
-  defp _parse(_) do
-    raise ArgumentError, message: "string contains non-literal term(s)"
+  defp _parse(e) do
+    raise ArgumentError, message: "string contains non-literal term(s) #{inspect(e)}"
   end
 end
