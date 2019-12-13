@@ -286,12 +286,16 @@ defmodule BotArmy.BTParser do
          args <- args_str |> parse_args!(tree["properties"]),
          mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
          function <- String.to_atom(function_str),
+         # If the action module is never used (which is likely the case when
+         # parsing from json) it won't get loaded
+         Code.ensure_loaded(mod),
          {:exists?, true} <-
            {:exists?,
             function_exported?(
               mod,
               function,
-              Enum.count(args)
+              # add 1 for the implicit "context" argument that gets tacked on
+              Enum.count(args) + 1
             )} do
       action(mod, function, args)
     else
