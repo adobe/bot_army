@@ -32,7 +32,7 @@ defmodule BotArmy.BTParserTest do
   describe "BTParser" do
     test "parse/1" do
       path = "test/bt_sample.json"
-      parsed = BTParser.parse!(path)
+      parsed = BTParser.parse!(path, %{x: "from context"})
       assert parsed == expected_parsed_tree()
     end
   end
@@ -55,7 +55,7 @@ defmodule BotArmy.BTParserTest do
             action(BotArmy.Actions, :succeed_rate, [0.5])
           ])
         ),
-        Node.repeat_n(5, action(A, :with_args, [2, "bye"])),
+        Node.repeat_n(5, action(A, :with_args, [2, "from context"])),
         action(BotArmy.Actions, :wait, [1]),
         action(BotArmy.Actions, :wait, [1, 10]),
         Node.select([

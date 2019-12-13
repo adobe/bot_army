@@ -9,10 +9,11 @@ defmodule BotArmy.BTParser do
   import BotArmy.Actions, only: [action: 3]
 
   @doc """
-  Parses the supplied JSON file created with the visual editor.
+  Parses the supplied JSON file created with the visual editor.  Pass in an optional
+  map to be merged onto the root node's properties (overwriting any existing keys).
   """
-  @spec parse!(path :: String.t()) :: BehaviorTree.Node.t()
-  def parse!(path) do
+  @spec parse!(path :: String.t(), context :: map) :: BehaviorTree.Node.t()
+  def parse!(path, context \\ %{}) do
     project =
       path
       |> File.read!()
@@ -28,10 +29,8 @@ defmodule BotArmy.BTParser do
           end).()
 
     root_tree =
-      Enum.find(
-        project["trees"],
-        fn %{"title" => title} -> String.downcase(title) == "root" end
-      )
+      project["trees"]
+      |> Enum.find(fn %{"title" => title} -> String.downcase(title) == "root" end)
 
     unless root_tree,
       do:
@@ -41,7 +40,13 @@ defmodule BotArmy.BTParser do
           }"
         )
 
-    tree = convert_tree(root_tree, project)
+    context_with_string_keys = for {k, v} <- context, into: %{}, do: {to_string(k), v}
+
+    tree =
+      root_tree
+      |> Map.update!("properties", &Map.merge(&1, context_with_string_keys))
+      |> convert_tree(project)
+
     tree
   end
 
@@ -59,6 +64,10 @@ defmodule BotArmy.BTParser do
     Map.get(tree["nodes"], id)
   end
 
+  # Given context of `%{num: 1, "str" -> "hi"}`
+  # `replace_templates!("9, {{{num}}, {{str}}", context)` -> `~s(9, 1, "hi")`
+  # `replace_templates!("{{num}}", context)` -> `~s(9)`
+  # `replace_templates!("{{str}}", context)` -> `~s("hi")`
   defp replace_templates!(str, context) when is_binary(str) and is_map(context) do
     Regex.replace(~r/{{([^}]+)}}/, str, fn _whole_match, key ->
       value = Map.get(context, key)
@@ -73,11 +82,14 @@ defmodule BotArmy.BTParser do
 
       # The looked-up value might be an int, which doesn't work with Regex.replace
       # (becomes a binary), so we must to_string it first
-      to_string(value)
+      # Otherwise, it needs to be wrapped in quotes to appear as it would if it were
+      # specified directly, (see examples above function)
+      case value do
+        i when is_integer(i) -> to_string(i)
+        other -> ~s("#{other}")
+      end
     end)
   end
-
-  defp replace_templates!(non_string, _context), do: non_string
 
   defp ensure_int(int) when is_integer(int), do: {:ok, int}
 
@@ -91,18 +103,35 @@ defmodule BotArmy.BTParser do
   defp get_properties(node, context) do
     node["properties"]
     |> Enum.map(fn {k, v} ->
-      {k, replace_templates!(v, context)}
+      {k,
+       v
+       # properties might be ints, so ensure they are strings for replace_templates!
+       # and TermParser.parse to work
+       |> to_string
+       |> replace_templates!(context)
+       |> TermParser.parse()
+       |> case do
+         {:ok, parsed} ->
+           parsed
+
+         e ->
+           raise(
+             ~s(Cannot parse property "#{k}" with value `#{v}` in #{inspect(node["properties"])}, error #{
+               inspect(e)
+             })
+           )
+       end}
     end)
     |> Enum.into(%{})
   end
 
   defp extract_args!(str, context) when is_binary(str) do
     [_all, args] = Regex.run(~r/^[^(]+\(([^)]*)\)/, str)
-    args |> replace_templates!(context) |> parse_args!()
+    args |> parse_args!(context)
   end
 
-  defp parse_args!(args) do
-    case args |> (&("[" <> &1 <> "]")).() |> TermParser.parse() do
+  defp parse_args!(args, context) do
+    case args |> replace_templates!(context) |> (&("[" <> &1 <> "]")).() |> TermParser.parse() do
       {:ok, parsed_args} ->
         parsed_args
 
@@ -254,7 +283,7 @@ defmodule BotArmy.BTParser do
            {:format?, Regex.run(~r/^([^(]+)\((.*)\)(?:\s.+|$)/, node["title"])},
          {:format?, [function_str | mod_reversed]} when mod_reversed != [] and function_str != "" <-
            {:format?, mod_fn |> String.split(".") |> Enum.reverse()},
-         args <- args_str |> replace_templates!(tree["properties"]) |> parse_args!(),
+         args <- args_str |> parse_args!(tree["properties"]),
          mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
          function <- String.to_atom(function_str),
          {:exists?, true} <-
