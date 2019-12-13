@@ -1,23 +1,23 @@
 defmodule A do
   @moduledoc false
 
-  def simple(), do: :ok
+  def simple(_context), do: :ok
 
-  def one_arg(_x), do: :ok
+  def one_arg(_context, _x), do: :ok
 
-  def with_args(_num, _string, _opts \\ []), do: :ok
+  def with_args(_context, _num, _string, _opts \\ []), do: :ok
 end
 
 defmodule A.Nested do
   @moduledoc false
 
-  def test(), do: :ok
+  def test(_context), do: :ok
 end
 
 defmodule B do
   @moduledoc false
 
-  def test(_a, _b \\ 22, _c \\ 33), do: :ok
+  def test(_context, _a, _b \\ 22, _c \\ 33), do: :ok
 end
 
 defmodule BotArmy.BTParserTest do
