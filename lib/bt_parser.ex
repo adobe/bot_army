@@ -3,17 +3,29 @@ defmodule BotArmy.BTParser do
   Parses JSON files created from the Behavior Tree visual editor
   (https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) into a
   `BehaviorTree.Node`, ready to be supplied to a bot.
+
+  Note, you can automatically import your defined Actions into the visual editor with
+  the included `bots.extract_actions` mix task:
+
+  `mix bots.extract_actions --actions-dir lib/actions/ --module-base MyProject.Actions`
   """
 
   alias BehaviorTree.Node
   import BotArmy.Actions, only: [action: 3]
 
   @doc """
-  Parses the supplied JSON file created with the visual editor.  Pass in an optional
-  map to be merged onto the root node's properties (overwriting any existing keys).
+  Parses the supplied JSON file created with the visual editor.
+
+  The following `opts` are allowed:
+
+  * `context` - a map of keys and values to be merged onto the root node's properties
+  (overwriting any existing keys).
+  * `module_base` -  a common module base to prefix each parsed generic function
+  style action and custom action.  Useful in combination with the `module-base` flag
+  on the `bots.extract_actions` mix task.
   """
-  @spec parse!(path :: String.t(), context :: map) :: BehaviorTree.Node.t()
-  def parse!(path, context \\ %{}) do
+  @spec parse!(path :: String.t(), opts :: Keyword.t()) :: BehaviorTree.Node.t()
+  def parse!(path, opts \\ []) do
     project =
       path
       |> File.read!()
@@ -40,12 +52,15 @@ defmodule BotArmy.BTParser do
           }"
         )
 
+    context = Keyword.get(opts, :context, %{})
     context_with_string_keys = for {k, v} <- context, into: %{}, do: {to_string(k), v}
+
+    project_with_module_base = Map.put(project, "module_base", Keyword.get(opts, :module_base))
 
     tree =
       root_tree
       |> Map.update!("properties", &Map.merge(&1, context_with_string_keys))
-      |> convert_tree(project)
+      |> convert_tree(project_with_module_base)
 
     tree
   end
@@ -141,19 +156,28 @@ defmodule BotArmy.BTParser do
     end
   end
 
-  defp parse_action_syntax(str, context) when is_binary(str) do
+  defp print_mfa(m, f, a) do
+    String.trim_leading(to_string(m), "Elixir.") <>
+      "." <> to_string(f) <> "/" <> to_string(Enum.count(a) + 1)
+  end
+
+  defp parse_action_syntax(str, module_base, context) when is_binary(str) do
     with {:format?, [_all, mod_fn, args_str]} <-
            {:format?, Regex.run(~r/^([^(]+)\((.*)\)(?:\s.+|$)/, str)},
          {:format?, [function_str | mod_reversed]} when mod_reversed != [] and function_str != "" <-
            {:format?, mod_fn |> String.split(".") |> Enum.reverse()},
          args <- args_str |> parse_args!(context),
-         mod <- mod_reversed |> Enum.reverse() |> Module.concat(),
+         mod <-
+           mod_reversed
+           |> Enum.reverse()
+           |> List.insert_at(0, module_base)
+           |> Module.concat(),
          function <- String.to_atom(function_str),
          # If the action module is never used (which is likely the case when
          # parsing from json) it won't get loaded
          Code.ensure_loaded(mod),
-         {:exists?, true} <-
-           {:exists?,
+         {:exists?, _, true} <-
+           {:exists?, print_mfa(mod, function, args),
             function_exported?(
               mod,
               function,
@@ -167,8 +191,8 @@ defmodule BotArmy.BTParser do
                 str
               }\"."
 
-      {:exists?, false} ->
-        raise "The provided action does not exist: \"#{str}\""
+      {:exists?, name, false} ->
+        raise "The provided action does not exist: \"#{name}\""
 
       e ->
         {:error, e}
@@ -311,8 +335,8 @@ defmodule BotArmy.BTParser do
 
   ### Actions
 
-  defp convert_node(%{"name" => "runner"} = node, tree, _project) do
-    case parse_action_syntax(node["title"], tree["properties"]) do
+  defp convert_node(%{"name" => "runner"} = node, tree, project) do
+    case parse_action_syntax(node["title"], project["module_base"], tree["properties"]) do
       {:ok, {mod, function, args}} ->
         action(mod, function, args)
 
@@ -377,7 +401,7 @@ defmodule BotArmy.BTParser do
         |> convert_tree(project)
 
       nil ->
-        case parse_action_syntax(node["title"], tree["properties"]) do
+        case parse_action_syntax(node["title"], project["module_base"], tree["properties"]) do
           {:ok, {mod, function, args}} ->
             action(mod, function, args)
 

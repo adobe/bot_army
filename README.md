@@ -61,7 +61,8 @@ See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more detail
 
 No problem, check out the [Behavior Tree
 Editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) to make
-json files that you can parse with `BotArmy.BTParser.parse!/2`.
+json files that you can parse with `BotArmy.BTParser.parse!/2`.  You export your
+actions with `mix bots.extract_actions`.
 
 ![Behavior Tree Editor
 example](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor/blob/master/preview.png?raw=true)

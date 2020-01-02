@@ -20,6 +20,26 @@ defmodule B do
   def test(_context, _a, _b \\ 22, _c \\ 33), do: :ok
 end
 
+defmodule Module.Base.A do
+  @moduledoc false
+  def test(_context), do: :ok
+end
+
+defmodule Module.Base.A.Nested do
+  @moduledoc false
+  def test(_context), do: :ok
+end
+
+defmodule Module.Base.B do
+  @moduledoc false
+  def test(_context), do: :ok
+end
+
+defmodule Module.Base.Custom do
+  @moduledoc false
+  def test(_context), do: :ok
+end
+
 defmodule BotArmy.BTParserTest do
   @moduledoc false
 
@@ -32,8 +52,22 @@ defmodule BotArmy.BTParserTest do
   describe "BTParser" do
     test "parse/1" do
       path = "test/bt_sample.json"
-      parsed = BTParser.parse!(path, %{x: "from context"})
+      parsed = BTParser.parse!(path, context: %{x: "from context"})
       assert parsed == expected_parsed_tree()
+    end
+
+    test "using module_base" do
+      expected =
+        Node.select([
+          action(Module.Base.A, :test, []),
+          action(Module.Base.A.Nested, :test, []),
+          action(Module.Base.B, :test, []),
+          action(Module.Base.Custom, :test, []),
+          action(BotArmy.Actions, :wait, [1])
+        ])
+
+      parsed = BTParser.parse!("test/base_name_sample.json", module_base: "Module.Base")
+      assert parsed == expected
     end
   end
 
