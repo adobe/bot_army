@@ -5,18 +5,17 @@ Bots are defined by [Behavior
 Trees](https://hexdocs.pm/behavior_tree/BehaviorTree.html) to replicate different
 user sequences.
 
-This package is a generic runner.  It works in conjunction with domain specific bots
+This package is a generic runner. It works in conjunction with domain specific bots
 that you define in the service you want to test.
 
 ## Behavior what?
 
-Behavior trees.  It's a nifty way to declaratively express complex and variable
-sequences of actions.  Most importantly, they are composable, which makes them easy
+Behavior trees. It's a nifty way to declaratively express complex and variable
+sequences of actions. Most importantly, they are composable, which makes them easy
 to work with, and easy to scale.
 
 [Read up on the docs](https://hexdocs.pm/behavior_tree/BehaviorTree.html) or [Watch a
 video](https://www.youtube.com/watch?v=3sLYzxuKGXI).
-
 
 Bots look like this:
 
@@ -56,17 +55,15 @@ def try_something_else(context), do: ...
 
 See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more details.
 
-
 ## What if I want to make trees with a GUI editor?
 
 No problem, check out the [Behavior Tree
 Editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) to make
-json files that you can parse with `BotArmy.BTParser.parse!/2`.  You export your
+json files that you can parse with `BotArmy.BTParser.parse!/2`. You can export your
 actions with `mix bots.extract_actions`.
 
 ![Behavior Tree Editor
 example](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor/blob/master/preview.png?raw=true)
-
 
 ## Release the bots!
 
@@ -74,28 +71,25 @@ Run the bots with `mix bots.load_test`:
 
     mix bots.load_test --n 100 --tree MyService.Workflow.Simple
 
-
 ## Integration testing
 
 The bots can double as an integration testing system, which you can integrate into
-your CI pipeline.   You can run the integration tests directly by running
+your CI pipeline. You can run the integration tests directly by running
 `mix bots.integration_test`.
 
-You can also use the `integration/start` endpoint (see below).  The supplied
+You can also use the `integration/start` endpoint (see below). The supplied
 `callback_url` will be POSTed to with the results as `:ok` or `{:error, reason}`.
 
 See `BotArmy.IntegrationTest.Workflow` for how to use.
-
-
 
 ## Logging
 
 > By default, logs are shunted to the `./bot_run.log` file.
 
-It's hard to keep up with thousands of bots.  The logs help, but need to be analyzed
-in meaningful ways.  Using [`lnav`](http://lnav.org) to view the `bot_run.log` file
-is extremely useful.  One useful approach is simply to find where errors occurred,
-but making use of the SQL feature can give very useful metrics.  Try these queries
+It's hard to keep up with thousands of bots. The logs help, but need to be analyzed
+in meaningful ways. Using [`lnav`](http://lnav.org) to view the `bot_run.log` file
+is extremely useful. One useful approach is simply to find where errors occurred,
+but making use of the SQL feature can give very useful metrics. Try these queries
 for example (note that the key words are auto-derived from the log format):
 
     # list how many times each action ran
@@ -115,7 +109,6 @@ for example (note that the key words are auto-derived from the log format):
     logs queried)
     ;select action_0, avg(runs) from (select bot_id, action_0, count(*) runs from logline group by bot_id, action_0) group by action_0 order by avg(runs) desc
 
-
 `lnav` also offers some nice filtering options. For example:
 
     # Show only log lines where with a duration value of 1000ms or larger.
@@ -123,7 +116,7 @@ for example (note that the key words are auto-derived from the log format):
 
 > Logging Configuration Options
 
-Other logging formats may be useful depending on application.  For example, if logs are output to Splunk or some other log aggregation tooling, it may be beneficial to use JSON-formatted logs rather than a line-by-line representation.
+Other logging formats may be useful depending on application. For example, if logs are output to Splunk or some other log aggregation tooling, it may be beneficial to use JSON-formatted logs rather than a line-by-line representation.
 
 To enable JSON-formatted logs, pass the `--format-json-logs` option when starting your bot run.
 
@@ -164,7 +157,6 @@ action.
 used to catch any lurking problems not directly reported via the `actions` error
 counts.
 
-
 ## Communicating with the bots from outside
 
 The bots expose a simple HTTP api on port `8124`.
@@ -183,5 +175,4 @@ You can use the following routes:
 
 > Who tests the tests?
 
-Some.  Run `make test`.
-
+Some. Run `make test`.

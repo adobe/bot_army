@@ -1,13 +1,13 @@
 defmodule BotArmy.BTParser do
   @moduledoc """
-  Parses JSON files created from the Behavior Tree visual editor
-  (https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) into a
+  Parses JSON files created from the [Behavior Tree visual
+  editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) into a
   `BehaviorTree.Node`, ready to be supplied to a bot.
 
   Note, you can automatically import your defined Actions into the visual editor with
-  the included `bots.extract_actions` mix task:
+  the included `mix bots.extract_actions` mix task:
 
-  `mix bots.extract_actions --actions-dir lib/actions/ --module-base MyProject.Actions`
+  `mix bots.extract_actions --actions-dir lib/actions/ --module-base MyProject.Actions --bt-json-file lib/trees/tree.json`
   """
 
   alias BehaviorTree.Node

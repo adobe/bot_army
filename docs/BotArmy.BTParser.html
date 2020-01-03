@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.BTParser — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-f777f3ae0f.js"></script>
+    <script src="dist/sidebar_items-ef0c1b4b6e.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -73,9 +73,12 @@ BotArmy.BTParser              </h1>
 
 
         <section id="moduledoc">
-<p>Parses JSON files created from the Behavior Tree visual editor
-(https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) into a
+<p>Parses JSON files created from the <a href="https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor">Behavior Tree visual
+editor</a> into a
 <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html"><code class="inline">BehaviorTree.Node</code></a>, ready to be supplied to a bot.</p>
+<p>Note, you can automatically import your defined Actions into the visual editor with
+the included <a href="Mix.Tasks.Bots.ExtractActions.html"><code class="inline">mix bots.extract_actions</code></a> mix task:</p>
+<p><code class="inline">mix bots.extract_actions --actions-dir lib/actions/ --module-base MyProject.Actions --bt-json-file lib/trees/tree.json</code></p>
         </section>
 
         <section id="summary" class="details-list">
@@ -92,10 +95,9 @@ BotArmy.BTParser              </h1>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#parse!/2">parse!(path, context \\ %{})</a>
+    <a href="#parse!/2">parse!(path, opts \\ [])</a>
   </div>
-    <div class="summary-synopsis"><p>Parses the supplied JSON file created with the visual editor.  Pass in an optional
-map to be merged onto the root node&#39;s properties (overwriting any existing keys).</p></div>
+    <div class="summary-synopsis"><p>Parses the supplied JSON file created with the visual editor.</p></div>
 </div>
   </div>
         </section>
@@ -116,15 +118,24 @@ Functions          </h1>
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">parse!(path, context \\ %{})</span>
+    <h1 class="signature">parse!(path, opts \\ [])</span>
         
       <div class="specs">
-          <pre>parse!(path :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), context :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()) :: <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+          <pre>parse!(path :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
       </div>
   </div>
   <section class="docstring">
-<p>Parses the supplied JSON file created with the visual editor.  Pass in an optional
-map to be merged onto the root node&#39;s properties (overwriting any existing keys).</p>
+<p>Parses the supplied JSON file created with the visual editor.</p>
+<p>The following <code class="inline">opts</code> are allowed:</p>
+<ul>
+<li><code class="inline">context</code> - a map of keys and values to be merged onto the root node&#39;s properties
+(overwriting any existing keys).
+</li>
+<li><code class="inline">module_base</code> -  a common module base to prefix each parsed generic function
+style action and custom action.  Useful in combination with the <code class="inline">module-base</code> flag
+on the <code class="inline">bots.extract_actions</code> mix task.
+</li>
+</ul>
   </section>
 </section>
           </div>

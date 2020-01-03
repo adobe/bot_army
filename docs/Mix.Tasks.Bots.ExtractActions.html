@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="bot_army v0.1.0">
-    <title>BotArmy.Router — bot_army v0.1.0</title>
+    <title>mix bots.extract_actions — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
     <script src="dist/sidebar_items-ef0c1b4b6e.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
   </head>
-  <body data-type="modules">
+  <body data-type="tasks">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
     <div class="main">
 
@@ -69,12 +69,31 @@ bot_army      </a>
 
       <h1>
         <small class="app-vsn">bot_army v0.1.0</small>
-BotArmy.Router              </h1>
+mix bots.extract_actions              </h1>
 
 
         <section id="moduledoc">
-<p>The exposed HTTP routes for communiating with the bots.</p>
-<p>The parameters are similar to the docs in the mix tasks under <code class="inline">mix/tasks</code>.</p>
+<p>Generates &quot;custom action nodes&quot; for the <a href="https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor">behavior tree
+editor</a>.</p>
+<p>This will scan all actions defined in the supplied <code class="inline">actions-dir</code> directory to build
+a json representation.  If you provide a <code class="inline">bt-json-file</code>, it will insert the
+generated nodes into the <code class="inline">custom_nodes</code> section (replacing any existing nodes!),
+otherwise it will print the json to screen for you to copy and paste via the
+&quot;Project &gt; Import &gt; Nodes as JSON&quot; menu option (this appends to existing custom
+nodes).</p>
+<p>Parameters:</p>
+<ul>
+<li><code class="inline">actions-dir</code> - [required] Path to the directory containing all of your actions.
+</li>
+<li><code class="inline">module-base</code> - [optional] If all of your actions start with a common prefix (Ex:
+<code class="inline">MyProject.Actions</code>), you can include this parameter to strip that prefix, making
+it easier to read the nodes in the visual editor.  Be sure to include the
+<code class="inline">module_base</code> option in <a href="BotArmy.BTParser.html#parse!/2"><code class="inline">BotArmy.BTParser.parse!/2</code></a> to ensure the stripped base
+gets re-appended.
+</li>
+<li><code class="inline">bt-json-file</code> - [optional] Location of behavior tree editor project file.
+</li>
+</ul>
         </section>
 
         <section id="summary" class="details-list">
@@ -91,15 +110,10 @@ BotArmy.Router              </h1>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#run/1">run(args)</a>
   </div>
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
-  </div>
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p></div>
+    <div class="summary-synopsis"><p>A task needs to implement <code class="inline">run</code> which receives
+a list of command line args.</p></div>
 </div>
   </div>
         </section>
@@ -112,28 +126,18 @@ BotArmy.Router              </h1>
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="call/2">
+<section class="detail" id="run/1">
     <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#run/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">call(conn, opts)</span>
+    <h1 class="signature">run(args)</span>
           </div>
   <section class="docstring">
-<p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="init/1">
-    <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">init(opts)</span>
-          </div>
-  <section class="docstring">
-<p>Callback implementation for <a href="https://hexdocs.pm/plug/1.7.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
+<p>A task needs to implement <code class="inline">run</code> which receives
+a list of command line args.</p>
+<p>Callback implementation for <a href="https://hexdocs.pm/mix/Mix.Task.html#c:run/1"><code class="inline">Mix.Task.run/1</code></a>.</p>
   </section>
 </section>
           </div>
