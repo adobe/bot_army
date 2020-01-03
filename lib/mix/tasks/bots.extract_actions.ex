@@ -21,16 +21,22 @@ defmodule Mix.Tasks.Bots.ExtractActions do
   * `bt-json-file` - [optional] Location of behavior tree editor project file.
   """
 
+  # TODO ensure this makes it into the docs files
+
   use Mix.Task
 
   @shortdoc "Extract actions or behavior tree editor"
+
   def run(args) do
     # Needs this line to boot the actual tests application
     Mix.Task.run("app.start")
 
     Code.compiler_options(ignore_module_conflict: true)
 
-    {flags, _, _} = OptionParser.parse(args, strict: [actions_dir: :string, module_base: :string])
+    {flags, _, _} =
+      OptionParser.parse(args,
+        strict: [actions_dir: :string, module_base: :string, bt_json_file: :string]
+      )
 
     actions_dir =
       Keyword.get(flags, :actions_dir) || raise "You must specify the \"actions_dir\" parameter"
@@ -43,16 +49,35 @@ defmodule Mix.Tasks.Bots.ExtractActions do
 
     unless File.dir?(actions_dir), do: raise("#{inspect(actions_dir)} is not a valid directory")
 
-    inner =
+    exported_actions =
       actions_dir
       |> Path.join("/**/*.ex")
       |> Path.wildcard()
       |> Enum.flat_map(&process_file(&1, module_base))
-      |> Enum.join(",")
 
-    # TODO request json file arg and modify json instead of printing if present
-    IO.puts("[" <> inner <> "]")
-    IO.puts("SUCCESS, copy the above to import custom nodes")
+    bt_json_file = Keyword.get(flags, :bt_json_file)
+
+    if bt_json_file do
+      json =
+        bt_json_file
+        |> File.read!()
+        |> Jason.decode!()
+
+      json_with_custom_nodes = put_in(json, ["data", "custom_nodes"], exported_actions)
+
+      File.write!(bt_json_file, Jason.encode!(json_with_custom_nodes))
+
+      IO.puts(
+        "SUCCESS, open (or close and reopen) #{bt_json_file} in the behavior tree editor to see the custom actions."
+      )
+    else
+      inner =
+        exported_actions
+        |> Enum.map_join(",", &Jason.encode!/1)
+
+      IO.puts("[" <> inner <> "]")
+      IO.puts("SUCCESS, copy the above to import custom nodes")
+    end
   end
 
   defp process_file(file, module_base) do
@@ -69,17 +94,20 @@ defmodule Mix.Tasks.Bots.ExtractActions do
               |> Enum.join(".")
               |> String.replace_prefix(module_base, "")
               |> String.replace(~r/\(\s?[^,\s\)]+,?\s*/, "(")
-              |> Jason.encode!()
 
             docs =
               (is_map(fn_docs) && Map.get(fn_docs, "en")) ||
                 raise "No docs defined for #{signature}.  Please add some docs and retry"
 
-            encoded_docs = Jason.encode!(docs)
-
-            ~s/{"version":"0.3.0","scope":"node","name":#{signature},"category":"action","title":#{
-              signature
-            },"description":#{encoded_docs},"properties":{}}/
+            %{
+              version: "0.3.0",
+              scope: "node",
+              name: signature,
+              category: "action",
+              title: signature,
+              description: docs,
+              properties: %{}
+            }
         end)
 
       e ->
@@ -87,4 +115,3 @@ defmodule Mix.Tasks.Bots.ExtractActions do
     end
   end
 end
-
