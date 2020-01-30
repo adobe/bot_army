@@ -52,8 +52,20 @@ defmodule BotArmy.BTParserTest do
   describe "BTParser" do
     test "parse/1" do
       path = "test/bt_sample.json"
-      parsed = BTParser.parse!(path, context: %{x: "from context"})
+      parsed = BTParser.parse!(path, "Root", context: %{x: "from context"})
       assert parsed == expected_parsed_tree()
+    end
+
+    test "specifying a different tree" do
+      path = "test/bt_sample.json"
+      parsed = BTParser.parse!(path, "Tree B", context: %{x: "from context"})
+
+      assert parsed ==
+               Node.sequence([
+                 action(B, :test, [1, 2, 3]),
+                 action(B, :test, [999]),
+                 action(B, :test, [999, 999, 999])
+               ])
     end
 
     test "using module_base" do
@@ -66,7 +78,7 @@ defmodule BotArmy.BTParserTest do
           action(BotArmy.Actions, :wait, [1])
         ])
 
-      parsed = BTParser.parse!("test/base_name_sample.json", module_base: "Module.Base")
+      parsed = BTParser.parse!("test/base_name_sample.json", "Root", module_base: "Module.Base")
       assert parsed == expected
     end
   end

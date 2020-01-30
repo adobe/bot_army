@@ -21,8 +21,6 @@ defmodule Mix.Tasks.Bots.ExtractActions do
   * `bt-json-file` - [optional] Location of behavior tree editor project file.
   """
 
-  # TODO ensure this makes it into the docs files
-
   use Mix.Task
 
   @shortdoc "Extract actions or behavior tree editor"

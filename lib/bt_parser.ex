@@ -14,7 +14,9 @@ defmodule BotArmy.BTParser do
   import BotArmy.Actions, only: [action: 3]
 
   @doc """
-  Parses the supplied JSON file created with the visual editor.
+  Parses the requested tree in the supplied JSON file created with the visual editor.
+
+  The `tree` parameter should match the title of the tree in the editor.
 
   The following `opts` are allowed:
 
@@ -24,8 +26,9 @@ defmodule BotArmy.BTParser do
   style action and custom action.  Useful in combination with the `module-base` flag
   on the `bots.extract_actions` mix task.
   """
-  @spec parse!(path :: String.t(), opts :: Keyword.t()) :: BehaviorTree.Node.t()
-  def parse!(path, opts \\ []) do
+  @spec parse!(path :: String.t(), tree :: String.t(), opts :: Keyword.t()) ::
+          BehaviorTree.Node.t()
+  def parse!(path, tree_title, opts \\ []) do
     project =
       path
       |> File.read!()
@@ -42,12 +45,15 @@ defmodule BotArmy.BTParser do
 
     root_tree =
       project["trees"]
-      |> Enum.find(fn %{"title" => title} -> String.downcase(title) == "root" end)
+      |> Enum.find(fn
+        %{"title" => ^tree_title} -> true
+        _ -> false
+      end)
 
     unless root_tree,
       do:
         raise(
-          "You must name one of your trees \"Root\".  Found trees: #{
+          "Unable to find tree \"#{inspect(tree_title)}\"  Found trees: #{
             project["trees"] |> Enum.map(& &1["title"]) |> Enum.join(", ")
           }"
         )
