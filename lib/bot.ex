@@ -242,13 +242,19 @@ defmodule BotArmy.Bot do
 
   @doc false
   def log_action_outcome({action_module, action_fun_atom, _args}, duration, outcome) do
-    Logger.info(
-      "",
+    meta = [
       action:
         "#{inspect(action_module)}.#{action_fun_atom |> to_string |> String.trim_leading(":")}",
       duration: duration,
       outcome: outcome
-    )
+    ]
+
+    case outcome do
+      {:fail, _} -> Logger.warn("", meta)
+      :fail -> Logger.warn("", meta)
+      :error -> Logger.error("", meta)
+      _ -> Logger.info("", meta)
+    end
   end
 
   @doc false
@@ -258,22 +264,6 @@ defmodule BotArmy.Bot do
 
   @doc false
   def handle_error(error, state) do
-    duration = System.monotonic_time(:millisecond) - state.start_time
-    {action_module, action_fun_atom, _args} = BT.value(state.bt)
-
-    Logger.error(
-      "",
-      bot_id: state.id,
-      bot_pid: self(),
-      outcome: :error,
-      action:
-        "#{inspect(action_module)}.#{action_fun_atom |> to_string |> String.trim_leading(":")}",
-      uptime:
-        duration
-        |> Timex.Duration.from_milliseconds()
-        |> Timex.format_duration(:humanized)
-    )
-
     {:stop, error, state}
   end
 end
