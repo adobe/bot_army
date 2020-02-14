@@ -93,6 +93,8 @@ defmodule BotArmy.IntegrationTest do
 
   @doc """
   Runs a tree before all the tests in the module.
+
+  The body must return a tree.
   """
   defmacro pre_all_tree(message, context \\ quote(do: _), do: contents) do
     # don't show any output for setup trees
@@ -120,6 +122,9 @@ defmodule BotArmy.IntegrationTest do
 
   @doc """
   Runs a tree before each test in the module.
+
+  The body either needs to return a tree or `nil`, which is useful if you want to
+  conditionally run a tree based on a test's tag.
   """
   defmacro pre_tree(message, context \\ quote(do: _), do: contents) do
     # don't show any output for setup trees
@@ -131,18 +136,26 @@ defmodule BotArmy.IntegrationTest do
             message: message
           ] do
       setup unquote(context) = context do
-        :ok =
-          run_tree(
-            unquote(contents),
-            to_bot_id(unquote(message)),
-            context |> Map.take([:bot_module, :timeout]) |> Keyword.new()
-          )
+        case unquote(contents) do
+          nil ->
+            :ok
+
+          tree ->
+            :ok =
+              run_tree(
+                tree,
+                to_bot_id(unquote(message)),
+                context |> Map.take([:bot_module, :timeout]) |> Keyword.new()
+              )
+        end
       end
     end
   end
 
   @doc """
   Runs a tree after all the tests in the module.
+
+  The body must return a tree.
   """
   defmacro post_all_tree(message, context \\ quote(do: _), do: contents) do
     # don't show any output for setup trees
@@ -154,46 +167,16 @@ defmodule BotArmy.IntegrationTest do
             message: message
           ] do
       setup_all unquote(context) = context do
-        on_exit(fn ->
-          # Need an unlinked, monitored process to properly run a bot in on_exit
-          p =
-            spawn(fn ->
-              result =
-                run_tree(
-                  unquote(contents),
-                  to_bot_id(unquote(message)),
-                  # timeout is not in the context for setup_all
-                  context
-                  |> Map.take([:bot_module])
-                  |> Keyword.new()
-                  |> Keyword.merge(timeout: 3 * @timeout)
-                )
-
-              unless match?(:ok, result),
-                do: raise("#{inspect(result, pretty: true)}")
-            end)
-
-          ref = Process.monitor(p)
-
-          timeout = Map.get(context, :timeout, @timeout)
-
-          receive do
-            {:DOWN, ^ref, :process, ^p, :normal} ->
-              :ok
-
-            {:DOWN, ^ref, :process, ^p, e} ->
-              raise("Error during post all tree. #{inspect(e)}")
-          after
-            timeout ->
-              raise "Timeout while running post all tree after #{timeout}ms."
-          end
-        end)
+        do_post_tree(unquote(message), context, unquote(contents))
       end
     end
   end
 
   @doc """
   Runs a tree after each test in the module.
+
+  The body either needs to return a tree or `nil`, which is useful if you want to
+  conditionally run a tree based on a test's tag.
   """
   defmacro post_tree(message, context \\ quote(do: _), do: contents) do
     # don't show any output for setup trees
@@ -205,38 +188,46 @@ defmodule BotArmy.IntegrationTest do
             message: message
           ] do
       setup unquote(context) = context do
-        on_exit(fn ->
-          # Need an unlinked, monitored process to properly run a bot in on_exit
-          p =
-            spawn(fn ->
-              result =
-                run_tree(
-                  unquote(contents),
-                  to_bot_id(unquote(message)),
-                  context |> Map.take([:bot_module, :timeout]) |> Keyword.new()
-                )
-
-              unless match?(:ok, result),
-                do: raise("#{inspect(result, pretty: true)}")
-            end)
-
-          ref = Process.monitor(p)
-
-          timeout = Map.get(context, :timeout, @timeout)
-
-          receive do
-            {:DOWN, ^ref, :process, ^p, :normal} ->
-              :ok
-
-            {:DOWN, ^ref, :process, ^p, e} ->
-              raise("Error during post tree. #{inspect(e)}")
-          after
-            timeout ->
-              raise "Timeout while running post tree after #{timeout}ms."
-          end
-        end)
+        case unquote(contents) do
+          nil -> :ok
+          tree -> do_post_tree(unquote(message), context, tree)
+        end
       end
     end
+  end
+
+  @doc false
+  def do_post_tree(message, context, contents) do
+    ExUnit.Callbacks.on_exit(fn ->
+      # Need an unlinked, monitored process to properly run a bot in on_exit
+      p =
+        spawn(fn ->
+          result =
+            run_tree(
+              contents,
+              to_bot_id(message),
+              context |> Map.take([:bot_module, :timeout]) |> Keyword.new()
+            )
+
+          unless match?(:ok, result),
+            do: raise("#{inspect(result, pretty: true)}")
+        end)
+
+      ref = Process.monitor(p)
+
+      timeout = Map.get(context, :timeout, @timeout)
+
+      receive do
+        {:DOWN, ^ref, :process, ^p, :normal} ->
+          :ok
+
+        {:DOWN, ^ref, :process, ^p, e} ->
+          raise("Error during post tree. #{inspect(e)}")
+      after
+        timeout ->
+          raise "Timeout while running post tree after #{timeout}ms."
+      end
+    end)
   end
 
   @doc """
