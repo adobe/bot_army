@@ -2,15 +2,14 @@ defmodule BotArmy do
   @moduledoc false
   use Application
 
-  alias BotArmy.{Router, EtsMetrics, LoadTest, IntegrationTest, SharedData}
+  alias BotArmy.{Router, EtsMetrics, LoadTest, SharedData}
 
   def start(_types, _args) do
     children = [
-      # Note, the LoadTest/IntegrationTest monitors all the bots, so if the
-      # BotSupervisor crashes, it will update accordingly
+      # Note, the LoadTest monitors all the bots, so if the BotSupervisor crashes, it 
+      # will update accordingly
       SharedData,
       LoadTest,
-      IntegrationTest,
       {DynamicSupervisor, strategy: :one_for_one, name: BotSupervisor},
       EtsMetrics,
       Plug.Cowboy.child_spec(scheme: :http, plug: Router, options: [port: 8124])
