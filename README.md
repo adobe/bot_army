@@ -75,7 +75,7 @@ Run the bots with `mix bots.load_test`:
 
 The bots can double as an integration testing system, which you can integrate into
 your CI pipeline. Integration tests are run via
-[ExUnit](https://elixir-lang.org/docs.html) just like normal unit tests. See
+[ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html) just like normal unit tests. See
 `BotArmy.IntegrationTest` for useful helpers that allow you to run trees as your
 tests.
 

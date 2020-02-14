@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.IntegrationTest — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-ef0c1b4b6e.js"></script>
+    <script src="dist/sidebar_items-9266deed51.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -54,7 +54,6 @@ bot_army      </a>
 
       <li><a id="modules-list" href="#full-list">Modules</a></li>
 
-      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
 
       <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
   </ul>
@@ -73,11 +72,51 @@ BotArmy.IntegrationTest              </h1>
 
 
         <section id="moduledoc">
-<p>Manages an integration test run.</p>
-<p>Don&#39;t use this directly, call from <a href="Mix.Tasks.Bots.IntegrationTest.html"><code class="inline">mix bots.integration_test</code></a>.  See the
-documentation for the available params.</p>
-<p>This will run the &quot;pre&quot; tree first, then the &quot;parallel&quot; trees concurrently, then
-the &quot;post&quot; tree.  The post tree will always run, even if prior trees fail.</p>
+<p>Adds macros to assist in running bot trees in ExUnit.</p>
+<p>Create a test file as per the normal ExUnit process, for example, in
+<code class="inline">test/my_project_test.exs</code>:</p>
+<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyProjectTest</span><span class="w"> </span><span class="k" data-group-id="4809562071-1">do</span><span class="w">
+  </span><span class="na">@moduledoc</span><span class="w"> </span><span class="no">false</span><span class="w">
+
+  </span><span class="c1"># This will set up ExUnit.Case, import `action` from BotArmy.Actions and</span><span class="w">
+  </span><span class="c1"># alias BehaviorTree.Node.  You can pass `async: true` just like with `use</span><span class="w">
+  </span><span class="c1"># ExUnit.Case` if you want to run this test file in parallel to other async</span><span class="w">
+  </span><span class="c1"># files (be careful of tests that mutate a global state!).</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">BotArmy.IntegrationTest</span><span class="p">,</span><span class="w"> </span><span class="ss">async</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="w">
+
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">MyProject.Actions.Sample</span><span class="w">
+
+  </span><span class="c1"># use this if you want a log file (applies to all tests in module)</span><span class="w">
+  </span><span class="n">log_to_file</span><span class="p" data-group-id="4809562071-2">(</span><span class="p" data-group-id="4809562071-2">)</span><span class="w">
+
+  </span><span class="c1"># use this if you use a custom bot module (applies to all tests in module)</span><span class="w">
+  </span><span class="n">use_bot_module</span><span class="p" data-group-id="4809562071-3">(</span><span class="nc">MyProject.CustomBot</span><span class="p" data-group-id="4809562071-3">)</span><span class="w">
+
+  </span><span class="c1"># normal ExUnit setup how ever you need</span><span class="w">
+  </span><span class="n">setup</span><span class="w"> </span><span class="k" data-group-id="4809562071-4">do</span><span class="w">
+    </span><span class="p" data-group-id="4809562071-5">%{</span><span class="ss">magic_number</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p" data-group-id="4809562071-5">}</span><span class="w">
+  </span><span class="k" data-group-id="4809562071-4">end</span><span class="w">
+
+  </span><span class="c1"># you can also setup/cleanup via a tree similar to using `test_tree`</span><span class="w">
+  </span><span class="n">pre_all_tree</span><span class="w"> </span><span class="s">&quot;pre all&quot;</span><span class="w"> </span><span class="k" data-group-id="4809562071-6">do</span><span class="w">
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="4809562071-7">(</span><span class="p" data-group-id="4809562071-8">[</span><span class="n">action</span><span class="p" data-group-id="4809562071-9">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-10">[</span><span class="s">&quot;Pre all ...&quot;</span><span class="p" data-group-id="4809562071-10">]</span><span class="p" data-group-id="4809562071-9">)</span><span class="p" data-group-id="4809562071-8">]</span><span class="p" data-group-id="4809562071-7">)</span><span class="w">
+  </span><span class="k" data-group-id="4809562071-6">end</span><span class="w">
+
+  </span><span class="c1"># Run test trees with `test_tree`, which works very much like ExUnit&#39;s</span><span class="w">
+  </span><span class="c1"># `test`, except it will run the bot and pass or fail based on its outcome.</span><span class="w">
+  </span><span class="c1">#</span><span class="w">
+  </span><span class="c1"># Setting the `:verbose` tag will show all of the bot&#39;s logs for that test,</span><span class="w">
+  </span><span class="c1"># otherwise only errors will show.</span><span class="w">
+
+  </span><span class="na">@tag</span><span class="w"> </span><span class="ss">:verbose</span><span class="w">
+  </span><span class="n">test_tree</span><span class="w"> </span><span class="s">&quot;validate target number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="k" data-group-id="4809562071-11">do</span><span class="w">
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">select</span><span class="p" data-group-id="4809562071-12">(</span><span class="p" data-group-id="4809562071-13">[</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4809562071-14">(</span><span class="nc">Sample</span><span class="p">,</span><span class="w"> </span><span class="ss">:validate_number</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-15">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="p" data-group-id="4809562071-15">]</span><span class="p" data-group-id="4809562071-14">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="4809562071-16">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-17">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot; is an invalid number&quot;</span><span class="p" data-group-id="4809562071-17">]</span><span class="p" data-group-id="4809562071-16">)</span><span class="w">
+    </span><span class="p" data-group-id="4809562071-13">]</span><span class="p" data-group-id="4809562071-12">)</span><span class="w">
+  </span><span class="k" data-group-id="4809562071-11">end</span></code></pre>
+<p>Note, if a tree takes longer than 1 minute to run, it will fail the test.  You can
+set <code class="inline">@moduletag timeout: n</code> (or <code class="inline">@tag timeout: n</code> per test) to raise this limit.</p>
         </section>
 
         <section id="summary" class="details-list">
@@ -94,84 +133,65 @@ the &quot;post&quot; tree.  The post tree will always run, even if prior trees f
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#add_test/2">add_test(key, tests)</a>
+    <a href="#log_to_file/1">log_to_file(path \\ &quot;bot_run.log&quot;)</a>
   </div>
+    <div class="summary-synopsis"><p>Include <code class="inline">log_to_file()</code> if you want the full logs to be saved to a file.  You can
+pass a path to the file you want to log to, or it defaults to <code class="inline">bot_run.log</code>.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#child_spec/1">child_spec(init_arg)</a>
+    <a href="#post_all_tree/3">post_all_tree(message, context \\ quote do
+  _
+end, list)</a>
   </div>
-    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor.</p></div>
+    <div class="summary-synopsis"><p>Runs a tree after all the tests in the module.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_failed_tests/1">find_failed_tests(test_status)</a>
+    <a href="#post_tree/3">post_tree(message, context \\ quote do
+  _
+end, list)</a>
   </div>
+    <div class="summary-synopsis"><p>Runs a tree after each test in the module.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(starting_state)</a>
+    <a href="#pre_all_tree/3">pre_all_tree(message, context \\ quote do
+  _
+end, list)</a>
   </div>
-    <div class="summary-synopsis"><p>Invoked when the server is started. <code class="inline">start_link/3</code> or <code class="inline">start/3</code> will
-block until it returns.</p></div>
+    <div class="summary-synopsis"><p>Runs a tree before all the tests in the module.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#mark_test_failed/3">mark_test_failed(key, reason, tests)</a>
+    <a href="#pre_tree/3">pre_tree(message, context \\ quote do
+  _
+end, list)</a>
   </div>
+    <div class="summary-synopsis"><p>Runs a tree before each test in the module.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#mark_test_passed/2">mark_test_passed(key, tests)</a>
+    <a href="#run_tree/3">run_tree(tree, bot_id, opts \\ [])</a>
   </div>
+    <div class="summary-synopsis"><p>Runs a bot tree.  Used internally, but you could call it directly if you have a
+reason to.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#run/1">run(opts)</a>
+    <a href="#test_tree/3">test_tree(message, context \\ quote do
+  _
+end, contents)</a>
   </div>
-    <div class="summary-synopsis"><p>Starts the integration test.</p></div>
+    <div class="summary-synopsis"><p>This works very much like ExUnit&#39;s <code class="inline">test</code> macro, except it runs your bot tree and
+fails or succeeds based on the outcome.  The body must return a valid tree.  You
+can use values from the context in the tree, just as with normal ExUnit tests.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#run_passed?/1">run_passed?(test_status)</a>
+    <a href="#use_bot_module/1">use_bot_module(mod)</a>
   </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#start_bot/3">start_bot(id, tree, bot_callback_module)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#start_link/1">start_link(opts \\ [])</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#stop/0">stop()</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#test_failed/2">test_failed(ref, reason)</a>
-  </div>
-    <div class="summary-synopsis"><p>Report montitored bots upon failing.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#test_succeeded/1">test_succeeded(ref)</a>
-  </div>
-    <div class="summary-synopsis"><p>Report montitored bots upon succeeding.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#tests_complete?/1">tests_complete?(test_status)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#tree_with_done/1">tree_with_done(tree)</a>
-  </div>
+    <div class="summary-synopsis"><p>Specify this at the top of your module to use a specific bot module (see <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>).</p></div>
 </div>
   </div>
         </section>
@@ -184,227 +204,147 @@ block until it returns.</p></div>
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="add_test/2">
-    <div class="detail-header">
-    <a href="#add_test/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">add_test(key, tests)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="child_spec/1">
-    <div class="detail-header">
-    <a href="#child_spec/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">child_spec(init_arg)</span>
-          </div>
-  <section class="docstring">
-<p>Returns a specification to start this module under a supervisor.</p>
-<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="find_failed_tests/1">
-    <div class="detail-header">
-    <a href="#find_failed_tests/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">find_failed_tests(test_status)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="init/1">
-    <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">init(starting_state)</span>
-          </div>
-  <section class="docstring">
-<p>Invoked when the server is started. <code class="inline">start_link/3</code> or <code class="inline">start/3</code> will
-block until it returns.</p>
-<p><code class="inline">init_arg</code> is the argument term (second argument) passed to <code class="inline">start_link/3</code>.</p>
-<p>Returning <code class="inline">{:ok, state}</code> will cause <code class="inline">start_link/3</code> to return
-<code class="inline">{:ok, pid}</code> and the process to enter its loop.</p>
-<p>Returning <code class="inline">{:ok, state, timeout}</code> is similar to <code class="inline">{:ok, state}</code>
-except <code class="inline">handle_info(:timeout, state)</code> will be called after <code class="inline">timeout</code>
-milliseconds if no messages are received within the timeout.</p>
-<p>Returning <code class="inline">{:ok, state, :hibernate}</code> is similar to <code class="inline">{:ok, state}</code>
-except the process is hibernated before entering the loop. See
-<code class="inline">c:handle_call/3</code> for more information on hibernation.</p>
-<p>Returning <code class="inline">{:ok, state, {:continue, continue}}</code> is similar to
-<code class="inline">{:ok, state}</code> except that immediately after entering the loop
-the <code class="inline">c:handle_continue/2</code> callback will be invoked with the value
-<code class="inline">continue</code> as first argument.</p>
-<p>Returning <code class="inline">:ignore</code> will cause <code class="inline">start_link/3</code> to return <code class="inline">:ignore</code> and
-the process will exit normally without entering the loop or calling
-<code class="inline">c:terminate/2</code>. If used when part of a supervision tree the parent
-supervisor will not fail to start nor immediately try to restart the
-<a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a>. The remainder of the supervision tree will be started
-and so the <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> should not be required by other processes.
-It can be started later with <a href="https://hexdocs.pm/elixir/Supervisor.html#restart_child/2"><code class="inline">Supervisor.restart_child/2</code></a> as the child
-specification is saved in the parent supervisor. The main use cases for
-this are:</p>
-<ul>
-<li>The <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> is disabled by configuration but might be enabled later.
-</li>
-<li>An error occurred and it will be handled by a different mechanism than the
-   <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>. Likely this approach involves calling <a href="https://hexdocs.pm/elixir/Supervisor.html#restart_child/2"><code class="inline">Supervisor.restart_child/2</code></a>
-after a delay to attempt a restart.
-</li>
-</ul>
-<p>Returning <code class="inline">{:stop, reason}</code> will cause <code class="inline">start_link/3</code> to return
-<code class="inline">{:error, reason}</code> and the process to exit with reason <code class="inline">reason</code> without
-entering the loop or calling <code class="inline">c:terminate/2</code>.</p>
-<p>Callback implementation for <a href="https://hexdocs.pm/elixir/GenServer.html#c:init/1"><code class="inline">GenServer.init/1</code></a>.</p>
-  </section>
-</section>
-<section class="detail" id="mark_test_failed/3">
-    <div class="detail-header">
-    <a href="#mark_test_failed/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">mark_test_failed(key, reason, tests)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="mark_test_passed/2">
-    <div class="detail-header">
-    <a href="#mark_test_passed/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">mark_test_passed(key, tests)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="run/1">
-    <div class="detail-header">
-    <a href="#run/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">run(opts)</span>
-          </div>
-  <section class="docstring">
-<p>Starts the integration test.</p>
-<p>This supports parallel trees, and a pre and post step.</p>
-<p>Opts map:</p>
-<ul>
-<li><code class="inline">workflow</code> - [required] the module defining the work to be done.  Must implement
-<a href="BotArmy.IntegrationTest.Workflow.html"><code class="inline">BotArmy.IntegrationTest.Workflow</code></a>.
-</li>
-<li><code class="inline">bot</code> - [optional] a custom callback module implementing <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>, otherwise
-uses <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>
-</li>
-<li><code class="inline">callback</code> - [required] a function that will be called with the result of the
-test, which will either be <code class="inline">:passed</code> or <code class="inline">{:failed, &lt;failed tests&gt;}</code> where &quot;failed
-tests&quot; is a list of tuples with test keys and failure reasons.
-</li>
-</ul>
-<p>Returns <code class="inline">:ok</code> or <code class="inline">{:error, reason}</code>.</p>
-  </section>
-</section>
-<section class="detail" id="run_passed?/1">
-    <div class="detail-header">
-    <a href="#run_passed?/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">run_passed?(test_status)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="start_bot/3">
-    <div class="detail-header">
-    <a href="#start_bot/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">start_bot(id, tree, bot_callback_module)</span>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="start_link/1">
+<section class="detail" id="log_to_file/1">
   
-    <span id="start_link/0"></span>
+    <span id="log_to_file/0"></span>
   <div class="detail-header">
-    <a href="#start_link/1" class="detail-link" title="Link to this function">
+    <a href="#log_to_file/1" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">start_link(opts \\ [])</span>
-          </div>
+    <h1 class="signature">log_to_file(path \\ &quot;bot_run.log&quot;)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
   <section class="docstring">
+<p>Include <code class="inline">log_to_file()</code> if you want the full logs to be saved to a file.  You can
+pass a path to the file you want to log to, or it defaults to <code class="inline">bot_run.log</code>.</p>
   </section>
 </section>
-<section class="detail" id="stop/0">
-    <div class="detail-header">
-    <a href="#stop/0" class="detail-link" title="Link to this function">
+<section class="detail" id="post_all_tree/3">
+  
+    <span id="post_all_tree/2"></span>
+  <div class="detail-header">
+    <a href="#post_all_tree/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">stop()</span>
-          </div>
+    <h1 class="signature">post_all_tree(message, context \\ quote do
+  _
+end, list)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
   <section class="docstring">
+<p>Runs a tree after all the tests in the module.</p>
   </section>
 </section>
-<section class="detail" id="test_failed/2">
-    <div class="detail-header">
-    <a href="#test_failed/2" class="detail-link" title="Link to this function">
+<section class="detail" id="post_tree/3">
+  
+    <span id="post_tree/2"></span>
+  <div class="detail-header">
+    <a href="#post_tree/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">test_failed(ref, reason)</span>
-          </div>
+    <h1 class="signature">post_tree(message, context \\ quote do
+  _
+end, list)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
   <section class="docstring">
-<p>Report montitored bots upon failing.</p>
+<p>Runs a tree after each test in the module.</p>
   </section>
 </section>
-<section class="detail" id="test_succeeded/1">
-    <div class="detail-header">
-    <a href="#test_succeeded/1" class="detail-link" title="Link to this function">
+<section class="detail" id="pre_all_tree/3">
+  
+    <span id="pre_all_tree/2"></span>
+  <div class="detail-header">
+    <a href="#pre_all_tree/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">test_succeeded(ref)</span>
-          </div>
+    <h1 class="signature">pre_all_tree(message, context \\ quote do
+  _
+end, list)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
   <section class="docstring">
-<p>Report montitored bots upon succeeding.</p>
+<p>Runs a tree before all the tests in the module.</p>
   </section>
 </section>
-<section class="detail" id="tests_complete?/1">
-    <div class="detail-header">
-    <a href="#tests_complete?/1" class="detail-link" title="Link to this function">
+<section class="detail" id="pre_tree/3">
+  
+    <span id="pre_tree/2"></span>
+  <div class="detail-header">
+    <a href="#pre_tree/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
+      <span class="sr-only">Link to this macro</span>
     </a>
-    <h1 class="signature">tests_complete?(test_status)</span>
-          </div>
+    <h1 class="signature">pre_tree(message, context \\ quote do
+  _
+end, list)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
   <section class="docstring">
+<p>Runs a tree before each test in the module.</p>
   </section>
 </section>
-<section class="detail" id="tree_with_done/1">
-    <div class="detail-header">
-    <a href="#tree_with_done/1" class="detail-link" title="Link to this function">
+<section class="detail" id="run_tree/3">
+  
+    <span id="run_tree/2"></span>
+  <div class="detail-header">
+    <a href="#run_tree/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">tree_with_done(tree)</span>
+    <h1 class="signature">run_tree(tree, bot_id, opts \\ [])</span>
           </div>
   <section class="docstring">
+<p>Runs a bot tree.  Used internally, but you could call it directly if you have a
+reason to.</p>
+<p>Takes an <code class="inline">opts</code> param that can include <code class="inline">bot_module</code> (defaults to
+<a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>).</p>
+  </section>
+</section>
+<section class="detail" id="test_tree/3">
+  
+    <span id="test_tree/2"></span>
+  <div class="detail-header">
+    <a href="#test_tree/3" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature">test_tree(message, context \\ quote do
+  _
+end, contents)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
+  <section class="docstring">
+<p>This works very much like ExUnit&#39;s <code class="inline">test</code> macro, except it runs your bot tree and
+fails or succeeds based on the outcome.  The body must return a valid tree.  You
+can use values from the context in the tree, just as with normal ExUnit tests.</p>
+<p>Your tree will be wrapped in order to always call the <code class="inline">done</code> action when it
+finishes (to prevent the default of looping through the tree from the top).</p>
+  </section>
+</section>
+<section class="detail" id="use_bot_module/1">
+    <div class="detail-header">
+    <a href="#use_bot_module/1" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature">use_bot_module(mod)</span>
+    
+      <span class="note">(macro)</span>
+      </div>
+  <section class="docstring">
+<p>Specify this at the top of your module to use a specific bot module (see <a href="BotArmy.Bot.html"><code class="inline">BotArmy.Bot</code></a>).</p>
+<p>Defaults to <a href="BotArmy.Bot.Default.html"><code class="inline">BotArmy.Bot.Default</code></a>.</p>
   </section>
 </section>
           </div>

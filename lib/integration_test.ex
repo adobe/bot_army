@@ -1,4 +1,4 @@
-defmodule IntegrationTest do
+defmodule BotArmy.IntegrationTest do
   @moduledoc """
   Adds macros to assist in running bot trees in ExUnit.
 
@@ -81,8 +81,8 @@ defmodule IntegrationTest do
   end
 
   @doc """
-  Specify this at the top of your module to use a specific bot module (see
-  https://git.corp.adobe.com/pages/BotTestingFramework/bot_army/BotArmy.Bot.html#module-extending-the-bot).
+  Specify this at the top of your module to use a specific bot module (see `BotArmy.Bot`).
+
   Defaults to `BotArmy.Bot.Default`.
   """
   defmacro use_bot_module(mod) do
@@ -280,7 +280,8 @@ defmodule IntegrationTest do
   end
 
   @doc """
-  Runs a bot tree.  Used by `test_tree`.
+  Runs a bot tree.  Used internally, but you could call it directly if you have a
+  reason to.
 
   Takes an `opts` param that can include `bot_module` (defaults to
   `BotArmy.Bot.Default`).
@@ -317,10 +318,7 @@ defmodule IntegrationTest do
     end
   end
 
-  @doc """
-  "Wraps" a tree to ensure it ends with a `done ` action to prevent it from looping
-  through again.
-  """
+  @doc false
   def tree_with_done(tree),
     do:
       BehaviorTree.Node.sequence([
@@ -331,9 +329,7 @@ defmodule IntegrationTest do
         BotArmy.Actions.action(BotArmy.Actions, :done)
       ])
 
-  @doc """
-  Configures logging to a file, used by `log_to_file`.
-  """
+  @doc false
   def setup_log_to_file(path) when is_binary(path) do
     metadata = [
       :bot_id,
@@ -360,10 +356,7 @@ defmodule IntegrationTest do
     :ok
   end
 
-  @doc """
-  Configures logging to the console.  If `context` contains the `:verbose` tag, it
-  will show all actions, otherwise it only shows errors.
-  """
+  @doc false
   def configure_logger(context) do
     verbose = Map.get(context, :verbose)
 
@@ -390,9 +383,7 @@ defmodule IntegrationTest do
     :ok
   end
 
-  @doc """
-  Formats the test message to a bot id that can be easily filtered against
-  """
+  @doc false
   def to_bot_id(message) do
     message
     |> String.replace(~r/\s/, "_")

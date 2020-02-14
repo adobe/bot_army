@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>BotArmy.BTParser — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-ef0c1b4b6e.js"></script>
+    <script src="dist/sidebar_items-9266deed51.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -54,7 +54,6 @@ bot_army      </a>
 
       <li><a id="modules-list" href="#full-list">Modules</a></li>
 
-      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
 
       <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
   </ul>
@@ -95,9 +94,9 @@ the included <a href="Mix.Tasks.Bots.ExtractActions.html"><code class="inline">m
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#parse!/2">parse!(path, opts \\ [])</a>
+    <a href="#parse!/3">parse!(path, tree_title, opts \\ [])</a>
   </div>
-    <div class="summary-synopsis"><p>Parses the supplied JSON file created with the visual editor.</p></div>
+    <div class="summary-synopsis"><p>Parses the requested tree in the supplied JSON file created with the visual editor.</p></div>
 </div>
   </div>
         </section>
@@ -110,22 +109,24 @@ the included <a href="Mix.Tasks.Bots.ExtractActions.html"><code class="inline">m
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="parse!/2">
+<section class="detail" id="parse!/3">
   
-    <span id="parse!/1"></span>
+    <span id="parse!/2"></span>
   <div class="detail-header">
-    <a href="#parse!/2" class="detail-link" title="Link to this function">
+    <a href="#parse!/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">parse!(path, opts \\ [])</span>
+    <h1 class="signature">parse!(path, tree_title, opts \\ [])</span>
         
       <div class="specs">
-          <pre>parse!(path :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
+          <pre>parse!(path :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), tree :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) ::
+  <a href="https://hexdocs.pm/behavior_tree/0.3.1/BehaviorTree.Node.html#t:t/0">BehaviorTree.Node.t</a>()</pre>
       </div>
   </div>
   <section class="docstring">
-<p>Parses the supplied JSON file created with the visual editor.</p>
+<p>Parses the requested tree in the supplied JSON file created with the visual editor.</p>
+<p>The <code class="inline">tree</code> parameter should match the title of the tree in the editor.</p>
 <p>The following <code class="inline">opts</code> are allowed:</p>
 <ul>
 <li><code class="inline">context</code> - a map of keys and values to be merged onto the root node&#39;s properties
