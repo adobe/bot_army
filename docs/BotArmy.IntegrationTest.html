@@ -75,7 +75,7 @@ BotArmy.IntegrationTest              </h1>
 <p>Adds macros to assist in running bot trees in ExUnit.</p>
 <p>Create a test file as per the normal ExUnit process, for example, in
 <code class="inline">test/my_project_test.exs</code>:</p>
-<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyProjectTest</span><span class="w"> </span><span class="k" data-group-id="4809562071-1">do</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyProjectTest</span><span class="w"> </span><span class="k" data-group-id="1564302636-1">do</span><span class="w">
   </span><span class="na">@moduledoc</span><span class="w"> </span><span class="no">false</span><span class="w">
 
   </span><span class="c1"># This will set up ExUnit.Case, import `action` from BotArmy.Actions and</span><span class="w">
@@ -87,20 +87,20 @@ BotArmy.IntegrationTest              </h1>
   </span><span class="kn">alias</span><span class="w"> </span><span class="nc">MyProject.Actions.Sample</span><span class="w">
 
   </span><span class="c1"># use this if you want a log file (applies to all tests in module)</span><span class="w">
-  </span><span class="n">log_to_file</span><span class="p" data-group-id="4809562071-2">(</span><span class="p" data-group-id="4809562071-2">)</span><span class="w">
+  </span><span class="n">log_to_file</span><span class="p" data-group-id="1564302636-2">(</span><span class="p" data-group-id="1564302636-2">)</span><span class="w">
 
   </span><span class="c1"># use this if you use a custom bot module (applies to all tests in module)</span><span class="w">
-  </span><span class="n">use_bot_module</span><span class="p" data-group-id="4809562071-3">(</span><span class="nc">MyProject.CustomBot</span><span class="p" data-group-id="4809562071-3">)</span><span class="w">
+  </span><span class="n">use_bot_module</span><span class="p" data-group-id="1564302636-3">(</span><span class="nc">MyProject.CustomBot</span><span class="p" data-group-id="1564302636-3">)</span><span class="w">
 
   </span><span class="c1"># normal ExUnit setup how ever you need</span><span class="w">
-  </span><span class="n">setup</span><span class="w"> </span><span class="k" data-group-id="4809562071-4">do</span><span class="w">
-    </span><span class="p" data-group-id="4809562071-5">%{</span><span class="ss">magic_number</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p" data-group-id="4809562071-5">}</span><span class="w">
-  </span><span class="k" data-group-id="4809562071-4">end</span><span class="w">
+  </span><span class="n">setup</span><span class="w"> </span><span class="k" data-group-id="1564302636-4">do</span><span class="w">
+    </span><span class="p" data-group-id="1564302636-5">%{</span><span class="ss">magic_number</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p" data-group-id="1564302636-5">}</span><span class="w">
+  </span><span class="k" data-group-id="1564302636-4">end</span><span class="w">
 
   </span><span class="c1"># you can also setup/cleanup via a tree similar to using `test_tree`</span><span class="w">
-  </span><span class="n">pre_all_tree</span><span class="w"> </span><span class="s">&quot;pre all&quot;</span><span class="w"> </span><span class="k" data-group-id="4809562071-6">do</span><span class="w">
-    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="4809562071-7">(</span><span class="p" data-group-id="4809562071-8">[</span><span class="n">action</span><span class="p" data-group-id="4809562071-9">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-10">[</span><span class="s">&quot;Pre all ...&quot;</span><span class="p" data-group-id="4809562071-10">]</span><span class="p" data-group-id="4809562071-9">)</span><span class="p" data-group-id="4809562071-8">]</span><span class="p" data-group-id="4809562071-7">)</span><span class="w">
-  </span><span class="k" data-group-id="4809562071-6">end</span><span class="w">
+  </span><span class="n">pre_all_tree</span><span class="w"> </span><span class="s">&quot;pre all&quot;</span><span class="w"> </span><span class="k" data-group-id="1564302636-6">do</span><span class="w">
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">sequence</span><span class="p" data-group-id="1564302636-7">(</span><span class="p" data-group-id="1564302636-8">[</span><span class="n">action</span><span class="p" data-group-id="1564302636-9">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:log</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1564302636-10">[</span><span class="s">&quot;Pre all ...&quot;</span><span class="p" data-group-id="1564302636-10">]</span><span class="p" data-group-id="1564302636-9">)</span><span class="p" data-group-id="1564302636-8">]</span><span class="p" data-group-id="1564302636-7">)</span><span class="w">
+  </span><span class="k" data-group-id="1564302636-6">end</span><span class="w">
 
   </span><span class="c1"># Run test trees with `test_tree`, which works very much like ExUnit&#39;s</span><span class="w">
   </span><span class="c1"># `test`, except it will run the bot and pass or fail based on its outcome.</span><span class="w">
@@ -109,12 +109,12 @@ BotArmy.IntegrationTest              </h1>
   </span><span class="c1"># otherwise only errors will show.</span><span class="w">
 
   </span><span class="na">@tag</span><span class="w"> </span><span class="ss">:verbose</span><span class="w">
-  </span><span class="n">test_tree</span><span class="w"> </span><span class="s">&quot;validate target number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="k" data-group-id="4809562071-11">do</span><span class="w">
-    </span><span class="nc">Node</span><span class="o">.</span><span class="n">select</span><span class="p" data-group-id="4809562071-12">(</span><span class="p" data-group-id="4809562071-13">[</span><span class="w">
-      </span><span class="n">action</span><span class="p" data-group-id="4809562071-14">(</span><span class="nc">Sample</span><span class="p">,</span><span class="w"> </span><span class="ss">:validate_number</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-15">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="p" data-group-id="4809562071-15">]</span><span class="p" data-group-id="4809562071-14">)</span><span class="p">,</span><span class="w">
-      </span><span class="n">action</span><span class="p" data-group-id="4809562071-16">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4809562071-17">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot; is an invalid number&quot;</span><span class="p" data-group-id="4809562071-17">]</span><span class="p" data-group-id="4809562071-16">)</span><span class="w">
-    </span><span class="p" data-group-id="4809562071-13">]</span><span class="p" data-group-id="4809562071-12">)</span><span class="w">
-  </span><span class="k" data-group-id="4809562071-11">end</span></code></pre>
+  </span><span class="n">test_tree</span><span class="w"> </span><span class="s">&quot;validate target number&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="k" data-group-id="1564302636-11">do</span><span class="w">
+    </span><span class="nc">Node</span><span class="o">.</span><span class="n">select</span><span class="p" data-group-id="1564302636-12">(</span><span class="p" data-group-id="1564302636-13">[</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="1564302636-14">(</span><span class="nc">Sample</span><span class="p">,</span><span class="w"> </span><span class="ss">:validate_number</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1564302636-15">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="p" data-group-id="1564302636-15">]</span><span class="p" data-group-id="1564302636-14">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">action</span><span class="p" data-group-id="1564302636-16">(</span><span class="nc">BotArmy.Actions</span><span class="p">,</span><span class="w"> </span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1564302636-17">[</span><span class="n">context</span><span class="o">.</span><span class="n">magic_number</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot; is an invalid number&quot;</span><span class="p" data-group-id="1564302636-17">]</span><span class="p" data-group-id="1564302636-16">)</span><span class="w">
+    </span><span class="p" data-group-id="1564302636-13">]</span><span class="p" data-group-id="1564302636-12">)</span><span class="w">
+  </span><span class="k" data-group-id="1564302636-11">end</span></code></pre>
 <p>Note, if a tree takes longer than 1 minute to run, it will fail the test.  You can
 set <code class="inline">@moduletag timeout: n</code> (or <code class="inline">@tag timeout: n</code> per test) to raise this limit.</p>
         </section>
@@ -237,6 +237,7 @@ end, list)</span>
       </div>
   <section class="docstring">
 <p>Runs a tree after all the tests in the module.</p>
+<p>The body must return a tree.</p>
   </section>
 </section>
 <section class="detail" id="post_tree/3">
@@ -255,6 +256,8 @@ end, list)</span>
       </div>
   <section class="docstring">
 <p>Runs a tree after each test in the module.</p>
+<p>The body either needs to return a tree or <code class="inline">nil</code>, which is useful if you want to
+conditionally run a tree based on a test&#39;s tag.</p>
   </section>
 </section>
 <section class="detail" id="pre_all_tree/3">
@@ -273,6 +276,7 @@ end, list)</span>
       </div>
   <section class="docstring">
 <p>Runs a tree before all the tests in the module.</p>
+<p>The body must return a tree.</p>
   </section>
 </section>
 <section class="detail" id="pre_tree/3">
@@ -291,6 +295,8 @@ end, list)</span>
       </div>
   <section class="docstring">
 <p>Runs a tree before each test in the module.</p>
+<p>The body either needs to return a tree or <code class="inline">nil</code>, which is useful if you want to
+conditionally run a tree based on a test&#39;s tag.</p>
   </section>
 </section>
 <section class="detail" id="run_tree/3">
