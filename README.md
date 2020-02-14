@@ -74,13 +74,10 @@ Run the bots with `mix bots.load_test`:
 ## Integration testing
 
 The bots can double as an integration testing system, which you can integrate into
-your CI pipeline. You can run the integration tests directly by running
-`mix bots.integration_test`.
-
-You can also use the `integration/start` endpoint (see below). The supplied
-`callback_url` will be POSTed to with the results as `:ok` or `{:error, reason}`.
-
-See `BotArmy.IntegrationTest.Workflow` for how to use.
+your CI pipeline. Integration tests are run via
+[ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html) just like normal unit tests. See
+`BotArmy.IntegrationTest` for useful helpers that allow you to run trees as your
+tests.
 
 ## Logging
 
@@ -164,10 +161,7 @@ The bots expose a simple HTTP api on port `8124`.
 You can use the following routes:
 
 - `POST [host]:8124/load_test/start` (same params as `mix bots.load_test`)
-- `POST [host]:8124/integration_test/start` (same params as `mix bots.integration_test`,
-  plus `id` and `callback_url`)
 - `DELETE [host]:8124/load_test/stop`
-- `DELETE [host]:8124/integration_test/stop`
 - `GET [host]:8124/metrics`
 - `GET [host]:8124/logs`
 

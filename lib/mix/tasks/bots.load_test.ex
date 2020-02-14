@@ -6,7 +6,7 @@ defmodule Mix.Tasks.Bots.LoadTest do
   Supported arguments:
 
   * `n` number of bots, defaults to 10
-  * `tree` - [required] The full name of the module defining the integration test
+  * `tree` - [required] The full name of the module defining the test
   tree (must be in scope).  Must expose the function `tree/0`.  Ex:
   "MyService.Workflow.Simple"
   * `bot` - [optional] A custom callback module implementing `BotArmy.Bot`, otherwise

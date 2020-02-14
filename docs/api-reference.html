@@ -8,7 +8,7 @@
     <meta name="project" content="bot_army v0.1.0">
     <title>API Reference — bot_army v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-ef0c1b4b6e.js"></script>
+    <script src="dist/sidebar_items-9266deed51.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -54,7 +54,6 @@ bot_army      </a>
 
       <li><a id="modules-list" href="#full-list">Modules</a></li>
 
-      <li><a id="exceptions-list" href="#full-list">Exceptions</a></li>
 
       <li><a id="tasks-list" href="#full-list">Mix Tasks</a></li>
   </ul>
@@ -117,24 +116,7 @@ functionality or configuration.</p></div>
   <div class="summary-signature">
     <a href="BotArmy.IntegrationTest.html">BotArmy.IntegrationTest</a>
   </div>
-    <div class="summary-synopsis"><p>Manages an integration test run.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.BotMonitor.html">BotArmy.IntegrationTest.BotMonitor</a>
-  </div>
-    <div class="summary-synopsis"><p>watches the bots for the runner, reporting any succeeding or failing tests.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.FSMState.html">BotArmy.IntegrationTest.FSMState</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.html">BotArmy.IntegrationTest.Workflow</a>
-  </div>
-    <div class="summary-synopsis"><p>A behaviour to implement when defining an integration test run.</p></div>
+    <div class="summary-synopsis"><p>Adds macros to assist in running bot trees in ExUnit.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
@@ -184,40 +166,6 @@ like runtime config data.</p></div>
     </div>
   </section>
 
-  <section class="details-list">
-    <h2 id="exceptions" class="section-heading">
-  <a href="#exceptions" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
-  Exceptions
-</h2>
-
-    <div class="summary">
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.DuplicateParallelTestNameError.html">BotArmy.IntegrationTest.Workflow.DuplicateParallelTestNameError</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.ExistingParallelError.html">BotArmy.IntegrationTest.Workflow.ExistingParallelError</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.ExistingPostError.html">BotArmy.IntegrationTest.Workflow.ExistingPostError</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.ExistingPreError.html">BotArmy.IntegrationTest.Workflow.ExistingPreError</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="BotArmy.IntegrationTest.Workflow.NoParallelTestsDefinedError.html">BotArmy.IntegrationTest.Workflow.NoParallelTestsDefinedError</a>
-  </div>
-</div>
-    </div>
-  </section>
 
   <section class="details-list">
     <h2 id="mix-tasks" class="section-heading">
@@ -232,13 +180,6 @@ like runtime config data.</p></div>
   </div>
     <div class="summary-synopsis"><p>Generates &quot;custom action nodes&quot; for the <a href="https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor">behavior tree
 editor</a>.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="Mix.Tasks.Bots.IntegrationTest.html">mix bots.integration_test</a>
-  </div>
-    <div class="summary-synopsis"><p>Runs integration tests in an iex context, logging the result and returning an
-appropriate exit code.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">

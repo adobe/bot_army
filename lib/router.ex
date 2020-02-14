@@ -10,7 +10,7 @@ defmodule BotArmy.Router do
   plug(Plug.Parsers, parsers: [:json], pass: ["application/json"], json_decoder: Jason)
   alias BotArmy.Metrics.Export
   alias Mix.Tasks.Bots.Helpers
-  alias BotArmy.{IntegrationTest, LoadTest}
+  alias BotArmy.LoadTest
   alias BotArmy.LogFormatters.JSONLogFormatter
 
   plug(:match)
@@ -36,40 +36,8 @@ defmodule BotArmy.Router do
     send_resp(conn, 200, "Bots started")
   end
 
-  post "/integration_test/start" do
-    %{
-      "id" => id,
-      "callback_url" => callback_url,
-      "workflow" => workflow,
-      "bot" => bot,
-      "custom" => custom,
-      "log_options" => log_opts
-    } = conn.body_params
-
-    start_logs(log_opts)
-
-    bot_mod = Helpers.get_bot_mod(bot: bot)
-    workflow_mod = Helpers.get_workflow_mod(workflow: workflow)
-    Helpers.save_custom_config(custom: custom)
-
-    IntegrationTest.run(%{
-      workflow: workflow_mod,
-      bot: bot_mod,
-      callback: fn result ->
-        integration_callback(callback_url, %{id: id, result: result})
-      end
-    })
-
-    send_resp(conn, 200, "Bots started")
-  end
-
   delete "/load_test/stop" do
     LoadTest.stop()
-    send_resp(conn, 200, "Bots stopped")
-  end
-
-  delete "/integration_test/stop" do
-    IntegrationTest.stop()
     send_resp(conn, 200, "Bots stopped")
   end
 
@@ -120,23 +88,6 @@ defmodule BotArmy.Router do
 
     if Map.get(opts, "format-json-logs", "false") == "true" do
       Logger.configure_backend(:console, format: {JSONLogFormatter, :format})
-    end
-  end
-
-  defp integration_callback(url, %{id: id, result: result}) do
-    Logger.info(inspect(result, label: "Completed integration test, reporting results"))
-
-    url
-    |> HTTPoison.post(Poison.encode!(%{id: id, result: inspect(result)}), [
-      {"content-type", "application/json"}
-    ])
-    |> case do
-      {:ok, %HTTPoison.Response{status_code: 200}} ->
-        :ok
-
-      resp ->
-        Logger.error("Failed to contact #{url}.  Error: #{inspect(resp, pretty: true)}")
-        :error
     end
   end
 end

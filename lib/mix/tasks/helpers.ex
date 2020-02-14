@@ -27,24 +27,6 @@ defmodule Mix.Tasks.Bots.Helpers do
     tree_mod
   end
 
-  @doc "Supply the provided flags, receive the workflow.  Errors if it fails."
-  def get_workflow_mod(flags) do
-    workflow_string = flags |> Keyword.get(:workflow)
-
-    if is_nil(workflow_string),
-      do:
-        raise(
-          "You must specify the module defining the integration workflow (Ex: `--workflow Test.Integration.Workflow`)"
-        )
-
-    workflow_mod = parse_module(workflow_string)
-
-    if not workflow_mod.bot_army_workflow?,
-      do: raise("#{} must implement `BotArmy.Workflow`")
-
-    workflow_mod
-  end
-
   @doc """
   Saves custom config in SharedData.
   """
