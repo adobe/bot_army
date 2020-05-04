@@ -8,6 +8,9 @@ user sequences.
 This package is a generic runner. It works in conjunction with domain specific bots
 that you define in the service you want to test.
 
+See [the bot army starter](https://github.com/adobe/bot_army_starter) for a sample
+set up.
+
 ## Behavior what?
 
 Behavior trees. It's a nifty way to declaratively express complex and variable
