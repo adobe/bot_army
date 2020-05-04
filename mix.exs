@@ -4,7 +4,17 @@ defmodule BotArmy.MixProject do
   def project,
     do: [
       app: :bot_army,
-      version: "0.1.0",
+      version: "1.0.0",
+      description: "Testing library/runner for load and integration testing using intelligent bots",
+      package: [
+        name: "Bot Army",
+        licenses: "MIT",
+        links: %{
+          "GitHub" => "https://github.com/adobe/bot_army",
+        }
+      ],
+      source_url: "https://github.com/adobe/bot_army",
+      homepage_url: "https://github.com/adobe/bot_army",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
