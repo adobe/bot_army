@@ -36,7 +36,7 @@ def tree do
 end
 ```
 
-```
+```elixir
 # in MyService.Actions
 def get_ready(context) do
   {id: id} = set_up()
@@ -58,12 +58,12 @@ See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more detail
 ## What if I want to make trees with a GUI editor?
 
 No problem, check out the [Behavior Tree
-Editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor) to make
-json files that you can parse with `BotArmy.BTParser.parse!/2`. You can export your
-actions with `mix bots.extract_actions`.
+Editor](https://github.com/adobe/behavior_tree_editor) to make json files that you
+can parse with `BotArmy.BTParser.parse!/2`. You can export your actions with
+`mix bots.extract_actions`.
 
 ![Behavior Tree Editor
-example](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor/blob/master/preview.png?raw=true)
+example](https://raw.githubusercontent.com/adobe/behavior_tree_editor/master/preview.png)
 
 ## Release the bots!
 
