@@ -7,9 +7,8 @@ defmodule BotArmy.MixProject do
       version: "1.0.0",
       description: "Testing library/runner for load and integration testing using intelligent bots",
       package: [
-        name: "Bot Army",
         maintainers: ["Jeff Schomay"],
-        licenses: "MIT",
+        licenses: ["MIT"],
         links: %{
           "GitHub" => "https://github.com/adobe/bot_army",
         }
