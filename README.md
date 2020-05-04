@@ -53,7 +53,7 @@ end
 def try_something_else(context), do: ...
 ```
 
-See `BotArmy.Bot` and `BotArmy.BotManager` and `BotArmy.Actions` for more details.
+See `BotArmy.Bot` and `BotArmy.IntegrationTest` and `BotArmy.Actions` for more details.
 
 ## What if I want to make trees with a GUI editor?
 
