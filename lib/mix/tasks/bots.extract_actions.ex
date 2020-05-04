@@ -9,8 +9,8 @@
 
 defmodule Mix.Tasks.Bots.ExtractActions do
   @moduledoc """
-  Generates "custom action nodes" for the [behavior tree
-  editor](https://git.corp.adobe.com/BotTestingFramework/behavior_tree_editor).
+  Generates "custom action nodes" for the [behavior tree 
+  editor](https://github.com/adobe/behavior_tree_editor).
 
   This will scan all actions defined in the supplied `actions-dir` directory to build
   a json representation.  If you provide a `bt-json-file`, it will insert the
