@@ -8,8 +8,10 @@ user sequences.
 This package is a generic runner. It works in conjunction with domain specific bots
 that you define in the service you want to test.
 
-See [the bot army starter](https://github.com/adobe/bot_army_starter) for a sample
-set up.
+Quick start: install add `{:bot_army, "~> 1.0"}` to your `mix.exs` deps. See [the
+bot army starter](https://github.com/adobe/bot_army_starter) for a sample set up.
+The [Bot Army Cookbook](https://opensource.adobe.com/bot_army_cookbook/) has many
+tips and tricks for various techniques.
 
 ## Behavior what?
 
